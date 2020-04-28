@@ -1,0 +1,171 @@
+open a web browser:
+	import webbrowser
+	webbrowser.open("url")
+
+make python wait to do something
+
+	import time;
+	time.sleep(seconds)l
+
+function for current time:
+
+	time.ctime()
+
+break_time.py
+
+	import time;
+	import webbrowser;
+
+	total_breaks = 3;
+	break_count = 0;
+
+	print("This program started on " + time.ctime());
+	while(break_count < total_breaks):
+	    time.sleep(10);
+	    webbrowser.open("https://www.youtube.com/watch?v=dt1LHcKMcNs");
+	    break_count += 1;
+
+find files in a directory:
+
+	import os;
+	os.listdir(r"C:\Users\Mike\udacity-python-foundations\prank")
+
+rename elements of a list:
+
+	list.translate(table of characters to change, characters to remove)
+
+get current working directory:
+
+	saved_path = os.getcwd();
+
+change working directory:
+
+	os.chdir(r"path");
+
+rename_files.py:
+
+	import os;
+
+	def rename_files():
+	    file_list = os.listdir(r"C:\Users\Mike\udacity-python-foundations\prank\prank");
+	    print(file_list);
+	    saved_path = os.getcwd();
+	    print("Current Working Directory is " + saved_path);
+	    os.chdir(r"C:\Users\Mike\udacity-python-foundations\prank\prank");
+
+	    import re;
+	    for file_name in file_list:
+	        new_file = re.sub('[0123456789]', '', file_name);
+	        os.rename(file_name, new_file);
+	
+	rename_files();
+
+create a window:
+
+	window = turtle.Screen();
+
+change background color of window:
+
+	window.bgcolor("red");
+
+exit a window on click
+
+	window.exitonclick();
+
+run a loop a specific number of times:
+
+	for i in range(1, 5):
+		loop
+	>>>runs loop 4 times
+
+open a file:
+
+	def read_text():
+	    quotes = open(r"C:\Users\Mike\udacity-python-foundations\movie_quotes.txt");
+	    contents_of_file = quotes.read();
+	    print(contents_of_file);
+	    quotes.close();
+    
+	read_text()
+
+get the text from a website:
+
+	urllib.urlopen("url");
+
+check_profanity.py:
+
+from urllib.request import urlretrieve;
+
+	def read_text():
+	    quotes = open(r"C:\Users\Mike\udacity-python-foundations\movie_quotes.txt");
+	    contents_of_file = quotes.read();
+	    print(contents_of_file);
+	    lines = contents_of_file.split("\n\n")
+	    quotes.close();
+	    for line in lines:
+	        check_profanity(line);
+
+	def check_profanity(text_to_check):
+	    connection = urlretrieve('http://www.wdylike.appspot.com/?q=' + text_to_check);
+	    output = connection.read();
+	    print(output);
+	    connection.close();
+	   if "true" in output:
+		print("Profanity Alert!!");
+	   elif "false" in output:
+		print("This document has no curse words!");
+	   else:
+		print("Could not scan the document properly.");
+    
+	read_text();
+
+create a class:
+
+	class Class():
+		def __init__(self, movie_title, movie_storyline, poster_image, trailer_youtube):
+			self.title = movie_title;
+			self.storyline = movie_storyline;
+			self.poster_image_url = posterimage;
+			self.trailer_youtube_url = trailer_youtube;		
+
+	       def show_trailer(self):
+ 		        webbrowser.open(self.trailer_youtube_url);
+
+calling a variable from a class:
+
+	filename.Class.variable
+
+class doc
+
+	"""documentation"""
+	file.Class.__doc__
+
+inheritance:
+
+	class Parent():
+	    def __init__(self, last_name, eye_color):
+	        print("Parent Constructor Called");
+	        self.last_name = last_name;
+	        self.eye_color = eye_color;
+
+	    def show_info(self):
+	        print("Last Name = "+self.last_name);
+	        print("Eye Color - "+self.eye_color);
+
+	class Child(Parent):
+	    def __init__(self, last_name, eye_color, number_of_toys):
+	        print("Child constructor called");
+	        Parent.__init__(self, last_name, eye_color);
+	        self.number_of_toys = number_of_toys;
+
+	    def show_info(self):
+	        print("Last Name - "+self.last_name);
+	        print("Eye Color - "+self.eye_color);
+	        print("Number of Toys - "+str(self.number_of_toys));
+
+	miley_cyrus = Child("Cyrus", "Blue", 5);
+	miley_cyrus.show_info();
+
+calling a variable from within a class:
+
+	file.Class.variable

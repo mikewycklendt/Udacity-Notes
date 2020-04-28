@@ -1,0 +1,79 @@
+install virtualbox:
+
+	`https://www.virtualbox.org/wiki/Downloads
+
+install vagrant:
+
+	https://www.vagrantup.com/downloads.html
+
+open gitbash:
+
+	mkdir networking
+	cd networking
+	vagrant init ubuntu/trusty64
+	vagrant up
+
+log in via ssh:
+
+	vagrant ssh
+
+install networking tools:
+
+	sudo apt-get update && sudo apt-get upgrade
+
+	sudo apt-get install netcat-openbsd tcpdump traceroute mtr
+
+checking to see if you can communicate with a web server
+
+	ping -c3 (ip)
+
+
+
+printf 'HEAD / HTTP/1.1\r\nHost: en.wikipedia.org\r\n\r\n' | nc en.wikipedia.org 80
+
+	printf - printing formatted strings
+	nc - netcat connects to webserver
+	| - pipe.  takes output of one thing and  inputs it into the next command (nc)
+
+get netcat to listen on a specific port
+
+	`nc -l (port)
+
+end signal
+
+	control-d
+
+saving results of an nc command: > (file)
+
+	printf "GET / HTTP/1.1\r\nHost: www.example.com\r\n\r\n" 
+		| nc www.example.com 80 > example.txt
+
+port range you can listen on:
+
+	1024 = 65535
+
+getting back the ip address from a DNS name:
+
+	host -t a google.com
+
+get more information
+
+	dig www.google.com
+
+CNAME: CANONICAL NAME
+AAA (QUAD-A): IPv6 address
+NS: DNS name server
+
+check traffic on dns requests
+
+	sude tcpdump -n port 53
+
+TRACE THE ROUTE OF A CONNECTIONS:
+
+	traceroute (url)
+
+
+
+
+
+

@@ -1,0 +1,464 @@
+selecting columns and naming them
+
+	select 2+2 as sum
+
+joining tables:
+
+	SELECT animals.name, animals.species, diet.food
+	FROM animals JOIN diet
+	on animals.species = diet.species;
+	WHERE food = 'fish';
+
+Text and string types
+	text — a string of any length, like Python str or unicode types.
+	char(n) — a string of exactly n characters.
+	varchar(n) — a string of up to n characters.
+
+Numeric types
+	integer — an integer value, like Python int.
+	real — a floating-point value, like Python float. Accurate up to 
+	       six decimal places.
+	double precision — a higher-precision floating-point value. Accurate 
+			   up to 15 decimal places.
+	decimal — an exact decimal value.
+
+Date and time types
+	date — a calendar date; including year, month, and day.
+	time — a time of day.
+	timestamp — a date and time together.
+
+is NOT:
+
+	select name from animals
+
+	WHERE animals.name IS NOT 'Max' AND animals.species IS NOT 'gorilla';
+
+
+	or:
+
+	WHERE (NOT species = 'gorilla') AND (not name = 'Max');
+
+	or
+
+	WHERE NOT (species = 'gorilla' or name = 'Max');
+
+	or
+
+	WHERE species != 'gorilla' and name != 'Max';
+
+-- select max(name) from animals;
+
+
+-- select * from animals limit 10;
+
+
+-- select * from animals where species = 'orangutan' order by birthdate;
+
+
+-- select name from animals where species = 'orangutan' order by birthdate desc;
+
+
+-- select name, birthdate from animals order by name limit 10 offset 20;
+
+
+-- select species, min(birthdate) from animals group by species;
+
+
+-- select name, count(*) as num from animals
+
+   group by name
+
+   order by num desc
+
+   limit 5;
+--select name,count(*) as num from animals group by name;
+
+select species, count (*) as number 
+FROM animals 
+GROUP BY species 
+ORDER BY number desc;
+
+
+
+INSERTING INTO COLUMNS
+
+	INSERT into animals
+	VALUES ('Wibble', 'opossum', '2014-11-14');
+
+	INSERT INTO animals (name, species, birthdate)
+	VALUES ('Wibble', 'opossum', '2014-11-14');
+
+JOINING TABLES
+
+	select name
+	
+FROM diet, animals
+`	
+WHERE diet.food = 'fish' AND animals.species = diet.species;
+
+RESTRICTING AFTER AGGREGATION:
+
+	SELECT species, count(*) as num
+	FROM animals GROUP BY species
+	HAVING num = 1;
+
+	select food, count(*) as num
+	    from animals join diet
+	    on animals.species = diet.species
+	    group by food
+	    having num = 1;
+
+	select ordernames.name, count(*) as num
+	  from animals, taxonomy, ordernames
+	  where animals.species = taxonomy.name
+	    and taxonomy.t_order = ordernames.t_order
+	  group by ordernames.name
+	  order by num desc
+
+RETURN SMALLEST/LARGEST VALUE OF A SELECTED COLUMN
+
+	SELECT MIN(column_name)
+	SELECT MAX(column_name)
+
+LIMIT RETURNED RESULTS
+
+	SELECT column_name(s)
+	FROM table_name
+	WHERE condition
+	LIMIT number OFFSET number;
+
+CALLING A DATABASE FROM WITHIN PYTHON:
+
+import sqlite3
+
+
+# Fetch some student records from the database.
+
+db = sqlite3.connect("students")
+
+	OR:
+	db = psycopg2.connect("dbname=bears").
+c = db.cursor()
+
+query = "select name, id from students;"
+
+c.execute(query)
+
+rows = c.fetchall()
+
+
+# First, what data structure did we get?
+
+print "Row data:"
+
+print rows
+
+
+# And let's loop over it too:
+
+print
+
+print "Student names:"
+
+for row in rows:
+  
+	print "  ", row[0]
+
+
+db.close()
+
+INSERTING DATA FROM PYTHON:
+
+pg = psycopg2.connect("dbname=somedb")
+c = pg.cursor()
+c.execute("INSERT INTO names VALues('Jennifer Smith)")
+pg.commit()
+pg.close()
+
+CONNECT TO A DATABASE AND WORK WITH IT IN GITBASH:
+psql forum
+\d posts == shows columns in posts table
+\dt -- lists all the tables in the database
+\dt+ -- list tables plus additional information (notably, how big each table is)
+\H -- switch between printing tables in plain text vs HTML
+select * from posts \watch -- displays contents of the posts table and refreshes it
+			      every two seconds to see changes as you use the app
+	must be running the forum app in one terminal and the other running psql
+
+
+UPDATE:
+
+UPDATE posts
+SET content = 'cheese'
+WHERE content LIKE '%spam%';
+
+DELETE:
+
+DELETE FROM posts
+WHERE content = 'cheese';
+
+Reference — Python DB-API
+This is a reference for the material covered in the "Python DB-API" lesson.
+
+Python DB-API Quick Reference
+For a full reference to the Python DB-API, see the specification and the 
+documentation for specific database modules, such as sqlite3 and psycopg2.
+
+module.connect(...)
+Connect to a database. The arguments to connect differ from module to 
+module; see the documentation for details. connect returns a Connection 
+object or raises an exception.
+
+For the methods below, note that you don't literally call (for instance) 
+Connection.cursor() in your code. You make a Connection object, save it 
+in a variable (maybe called db) and then call db.cursor().
+
+Connection.cursor()
+Makes a Cursor object from a connection. Cursors are used to send SQL 
+statements to the database and fetch results.
+
+Connection.commit()
+Commits changes made in the current connection. You must call commit 
+before closing the connection if you want changes (such as inserts, 
+updates, or deletes) to be saved. Uncommitted changes will be visible 
+from your currect connection, but not from others.
+
+Connection.rollback()
+Rolls back (undoes) changes made in the current connection. You must 
+roll back if you get an exception if you want to continue using the 
+same connection.
+
+Connection.close()
+Closes the connection. Connections are always implicitly closed when 
+your program exits, but it's a good idea to close them manually 
+especially if your code might run in a loop.
+
+Cursor.execute(statement)
+Cursor.execute(statement, tuple)
+Execute an SQL statement on the database. If you want to substitute 
+variables into the SQL statement, use the second form — see the 
+documentation for details.
+
+If your statement doesn't make sense (like if it asks for a column 
+that isn't there), or if it asks the database to do something it can't 
+do (like delete a row of a table that is referenced by other tables' 
+rows) you will get an exception.
+
+Cursor.fetchall()
+Fetch all the results from the current statement.
+
+Cursor.fetchone()
+Fetch just one result. Returns a tuple, or None if there are no results.
+
+psql Quick Reference
+The psql command-line tool is really powerful. There's a complete 
+reference to it in the PostgreSQL documentation.
+
+To connect psql to a database running on the same machine (such as 
+your VM), all you need to give it is the database name. For instance, 
+the command psql forum will connect to the forum database.
+
+From within psql, you can run any SQL statement using the tables 
+in the connected database. Make sure to end SQL statements with a 
+semicolon, which is not always required from Python.
+
+You can also use a number of special psql commands to get information 
+about the database and make configuration changes. The \d posts command 
+shown in the video is one example — this displays the columns of the 
+posts table.
+
+Some other things you can do:
+
+\dt — list all the tables in the database.
+
+\dt+ — list tables plus additional information (notably, how big each 
+table is on disk).
+
+\H — switch between printing tables in plain text vs. HTML.
+
+\x
+TABLE tablename; == list the contents of a table
+\d+ tablename or \d tablename = list the contents of a table
+
+Bleach documentation
+Read the documentation for Bleach here: 
+http://bleach.readthedocs.org/en/latest/
+
+Update and delete statements
+The syntax of the update and delete statements:
+
+update table set column = value where restriction ;
+delete from table where restriction ;
+
+The where restriction in both statements works the same as in select 
+and supports the same set of operators on column values. In both cases,
+ if you leave off the where restriction, the update or deletion will 
+apply to all rows in the table, which is usually not what you want.
+
+like operator
+The like operator supports a simple form of text pattern-matching. 
+Whatever is on the left side of the operator (usually the name of a text 
+column) will be matched against the pattern on the right. The pattern is 
+an SQL text string (so it's in 'single quotes') and can use the % sign 
+to match any sub-string, including the empty string.
+
+If you are familiar with regular expressions, think of the % in like 
+patterns as being like the regex .* (dot star).
+
+If you are more familiar with filename patterns in the Unix shell or 
+Windows command prompt, % here is a lot like * (star) in those systems.
+
+For instance, for a table row where the column fish has the value 
+'salmon', all of these restrictions would be true:
+
+fish like 'salmon'
+fish like 'salmon%'
+fish like 'sal%'
+fish like '%n'
+fish like 's%n'
+fish like '%al%'
+fish like '%'
+fish like '%%%'
+And all of these would be false:
+
+fish like 'carp'
+fish like 'salmonella'
+fish like '%b%'
+fish like 'b%'
+fish like ''
+The term "spam" referring to junk posts comes from Monty Python's "Spam" 
+sketch. On the Internet, "spamming" was first used to mean repetitious 
+junk messages intended to disrupt a group chat. Later, it came to refer 
+to unsolicited ads on forums or email; and more recently to more-or-less 
+any repetitious or uninvited junk message.
+
+
+CREATING TABLES:
+
+create table tablename( column1 type [constraints],
+			column2 type [constraints],
+			[row constraints]);
+
+TYPE:
+
+	timestampz = timestamp with time zone
+
+CREATING DATABASE:
+
+	create dat6abase name[options];
+
+DELETING A DATABASE:
+
+	drop database name[options];
+
+DELETE TABLE:
+
+	drop table name[options];
+
+CONNECTING TO A DATABASE:
+
+	\c database
+
+CREATING A PRIMARY KEY:
+
+	create table students (
+	    id serial primary key,
+	    name text,
+	    birthdate date);
+
+MULTICOLUMN PRIMARY KEY:
+
+	CREATE table postal_places(
+	   postal_code text,
+	   country text,
+	   name text,
+	   primarty key(postal_code, country));
+
+DECLARING RELATIONSHIPS
+
+	CREATE TABLE sales(
+	    sku text references products(sku),
+	    sale_date date,
+	    count integer);
+
+	or just:
+
+	CREATE TABLE sales(
+	    sku text references products,
+	    sale_date date,
+	    count integer);
+
+SELF JOINS:
+
+	SELECT a.id, b.id
+	FROM residences as a,
+	     residences as b
+	WHERE
+	     a.building = b.building
+	     AND a.room = b.room
+	     AND a.id < b.id;
+
+LEFT JOIN:
+
+	select products.name, products.sku, count(sales.sku) as num
+	  from products left join sales
+	    on products.sku = sales.sku
+	  group by products.sku;
+
+SUBQUERY -- SELECTING FROM THE RESULTS FROM A SELECT
+
+	SELECT avg(bigscore) FROM
+	    (SELECT max(score) as bigscore
+	     FROM mooseball
+	     GROUP BY team)
+	    as maxes;
+
+	SELECT name, weight FROM players,
+	    (SELECT avg(weight) AS av FROM players) as subq
+	WHERE weight < av;
+
+VIEWS -- CREATING A TEMPORARY TABLE FROM A TABLE OR TABLES
+
+	create view course_size as
+	   SELECT course_id, count(*) as num
+	   FROM enrollment
+	   GROUP BY course_id;
+
+
+------------------
+
+
+SELECT totals.title, SUM(num) as totals 
+                FROM 
+                    (
+
+SELECT articles.title, articles.slug, log.path, count(log.path) as num FROM articles JOIN log ON log.path LIKE CONCAT('%', articles.slug, '%') GROUP BY log.path, articles.slug, articles.title;
+
+) 
+                    as totals 
+                    GROUP BY totals.title 
+                    ORDER BY totals DESC;
+
+
+1,677,735
+
+
+
+SELECT articles.title, articles.slug, log.path, count(log.path) as num FROM articles JOIN log ON log.path = CONCAT('/article/', articles.slug) GROUP BY log.path, articles.slug, articles.title ORDER BY num DESC LIMIT 3;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

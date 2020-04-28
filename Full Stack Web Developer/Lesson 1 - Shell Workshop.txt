@@ -1,0 +1,58 @@
+
+$COLUMNS - how wide your terminal is
+$LINES - how tall your terminal is
+
+LIST ALL FILES OF A CERTAIN TYPE:
+
+	ls -l Documents/*.pdf
+
+SEE THE SOURCE CODE OF A WEBPAge
+
+	curl '(URL)'
+		FOLLOW REDIRECTS:
+			curl -L '(url)'
+
+DOWNLOADING A FILE:
+
+	curl -o (filename) -L '(url)'
+
+VIEW A FILE:
+
+	cat (filename)
+	less (filename)
+		space/arrows to scroll down
+		b to go back
+		/(search) to search
+
+DELETE FILE
+
+	rm (file)
+	rmdir (directory)
+
+SEARCH THE CONTENTS OF A FILE
+
+	grep (word) (file) | less
+
+SEARCH A REMOTE FILE:
+
+	curl -L (url) | grep (word)
+
+COUNT NUMBER OF LINES WITH THE WORD IN IT:
+
+	curl -L (url) | grep (word) | wc -l
+	curl -L (url) | grep -c (word)
+
+SETTING A VARIABLE:
+
+	(variableName)='(value)'
+
+calling a variable:
+
+	echo $(variableName)
+
+
+
+
+
+
+		

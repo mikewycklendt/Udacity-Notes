@@ -1,0 +1,330 @@
+vagrant init ubuntu/trusty64
+vagrant up
+
+vagrant status
+This command will show you the current status of the virtual machine. It should currently read “default running (virtualbox)” along with some other information.
+
+vagrant suspend
+This command suspends your virtual machine. All of your work is saved and the machine is put into a “sleep mode” of sorts. The machines state is saved and it’s very quick to stop and start your work. You should use this command if you plan to just take a short break from your work but don’t want to leave the virtual machine running.
+
+vagrant up
+This gets your virtual machine up and running again. Notice we didn’t have to redownload the virtual machine image, since it’s already been downloaded.
+
+vagrant ssh
+This command will actually connect to and log you into your virtual machine. Once done you will see a few lines of text showing various performance statistics of the virtual machine along with a new command line prompt that reads vagrant@vagrant-ubuntu-trusty-64:~$
+
+vagrant halt
+This command halts your virtual machine. All of your work is saved and the machine is turned off - think of this as “turning the power off”. It’s much slower to stop and start your virtual machine using this command, but it does free up all of your RAM once the machine has been stopped. You should use this command if you plan to take an extended break from your work, like when you are done for the day. The command vagrant up will turn your machine back on and you can continue your work.
+
+vagrant destroy
+This command destroys your virtual machine. Your work is not saved, the machine is turned off and forgotten about for the most part. Think of this as formatting the hard drive of a computer. You can always use vagrant up to relaunch the machine but you’ll be left with the baseline Linux installation from the beginning of this course. You should not have to use this command at any time during this course unless, at some point in time, you perform a task on the virtual machine that makes it completely inoperable.
+
+pwd
+print working directory
+
+ls
+list files
+
+ls -a
+list all files including hidden one
+
+ls -al
+list all files in long format
+
+sudo command
+run a command as root user
+
+cat /etc/apt/sources.list
+list of all package sources
+
+sudo apt-get update
+get list of updates for packages you're using
+
+sudo apt-get upgrade
+update packages you're using
+
+man apt-get
+manual for apt-get command
+
+sudo apt-get autoremove
+autoremove packages we're not using
+
+sudo apt-get install finger
+install finger package
+
+finger
+outputs information about logged in users
+
+finger username
+information about user
+
+cat /etc/passw
+see information about user
+
+sudo adduser student
+add user named student
+
+ssh student@127.0.0.1 -p 2200
+login as student
+
+sudo cat /etc/sudoers
+list of users who can use sudo command
+
+sudo ls /etc/sudoers.d
+list of files in sudoers directory that isn't changed with updates
+
+sudo cp /etc/sudoers.d/vagrant /etc/sudoers.d/student
+copy vagrant sudoers file and rename it as student
+
+sudo nano /etc/sudoers.d/student
+edit student file change vagrant to student
+
+sudo passwd -e student
+force a password to expire
+
+ssh-keygen
+generates public/private key pair
+
+/c/Users/Mike/linux/.ssh/linuxCourse
+
+login as user -> mkdir .ssh
+create ssh key folder
+
+touch .ssh/authorized_keys
+generate key file
+
+nano .ssh/authorized_keys
+
+sudo cat /Users/Udacity/.ssh/linuxCourse
+copy ssh
+
+chmod 700 .ssh
+chmod 644 .ssh/authorized_keys
+
+sudo chown grader .ssh
+sudo chown gradser .ssh/authorized_keys
+
+ssh student@127.0.0.1 -p 2200 -i ~/linux/.ssh/linuxCourse
+to login
+
+sudo nano /etc/ssh/sshd_config
+set PasswordAuthentication to no
+
+sudo service ssh restart
+restarts ssh service
+
+ls -al
+d--------- directory
+---------- file
+	first 3 - owner
+	second 3 - group
+	third 3 - everyone
+		rw- read write
+		rwx - read write execute
+		r-- - read
+
+		first column owner
+		second column group
+
+		r = 4
+		w = 2
+		x = 1
+		- = 0
+
+sudo chown user file
+change owner
+
+sudo chgrp group file
+change group
+
+PORTS
+	HTTP - 80
+	HTTPS - 443
+	SSH - 22
+	FTP - 21
+	POP3 - 110
+	SMTP - 25
+
+
+
+
+FIREWALL
+
+	sudo ufw status
+	check status of firewall
+
+	sudo ufw default deny incoming
+	firewall denies all incoming requests
+
+	sudo ufw default allow outgoing
+	firewall allows all outgoing requests
+
+	sudo ufw allow ssh
+	allow ssh
+
+	sudo ufw allow 2222/tcp
+	allow ssh local host
+
+	sudo ufw allow www
+
+	sudo ufw enable
+	set up firewall
+
+APACHE
+
+	sudo apt-get install apache2
+	get apache
+
+	sudo apt-get install libapache2-mod-wsgi
+
+	edit file
+	/etc/apache2/sites-enabled/000-default.conf
+	found in between <VirtualHost *:80> and </VirtualHost> 
+		add WSGIScriptAlias / /var/www/html/myapp.wsgi
+		right before </VirtualHost>
+
+	sudo nano /var/www/html/myapp.wsgi
+		copy paste content
+
+			def application(environ, start_response):
+    		status = '200 OK'
+    		output = 'Hello Udacity!'
+
+    		response_headers = [('Content-type', 'text/plain'), ('Content-Length', str(len(output)))]
+    		start_response(status, response_headers)
+
+    		return [output]
+
+PIP
+
+	sudo apt-get install python-pip
+
+
+POSTGRESQL
+
+	sudo apt-get install postgresql
+	install postgresql
+
+	sudo pip install sqlalchemy
+
+	sudo apt-get install python-psycopg2
+
+	sudo apt-get install libpq-dev
+
+	sudo -u postgres createdb myapp
+	to create the database
+
+	sudo -u postgres psql
+		postgres=# create database mydb;
+		postgres=# create user myuser with encrypted password 'mypass';
+		postgres=# grant all privileges on database mydb to myuser;
+
+
+
+	import logging
+import sys
+logging.basicConfig(stream=sys.stderr)
+sys.path.insert(0, '/home/username/ExampleFlask/')
+from my_flask_app import app as application
+application.secret_key = 'anything you wish'
+
+=====================================
+SQLAlchemy
+=====================================
+
+sudo -H pip install SQLAlchemy
+
+=====================================
+OAuth2
+=====================================
+
+sudo -H pip install python-oauth2
+
+-------------------------
+FLASK
+-------------------------
+
+Installation Guide
+Install Apache
+sudo apt update
+sudo apt install apache2
+
+Install mod_wsgi
+for python 3.6 (preferable)
+sudo apt-get install libapache2-mod-wsgi-py3 python-dev
+
+for python 2.7
+
+sudo apt-get install libapache2-mod-wsgi-py python-dev
+
+Install flask
+(Assuming you have pip3.6 installed)
+pip3.6 install flask
+
+Check browser if it's running Apache
+apache2 -f /etc/apache2/apache2.conf -k start
+
+=============================
+APACHE ERROR LOG
+=============================
+
+/var/log/apache2/error.log
+
+=============================
+VIRTUAL ENVIRONMENT
+=============================
+
+sudo pip install virtualenv
+
+create virtual environment:
+	virtualenv venv
+
+activate virtual environment
+	source venv/bin/activate
+
+deactivate virtual environment
+	deactivate
+
+
+============================
+
+sudo a2ensite APP.conf
+
+sudo a2dissite APP.conf
+
+===========================
+
+sudo chmod a+x _filename_
+sudo chmod +rw _folder_
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

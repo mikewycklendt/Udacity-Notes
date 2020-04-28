@@ -1,0 +1,152 @@
+vagrant init ubuntu/trusty64
+vagrant up
+
+sudo apt-get install postgresql postgresql-contrib libpq-dev postgresql-client postgresql-client-common
+
+sudo apt-get install postgresql 
+
+
+
+sudo -u postgres psql postgres
+
+\password postgres
+
+quit
+\q
+
+sudo apt-get update
+sudo apt -y upgrade
+
+sudo apt-get install build-essential checkinstall
+sudo apt-get install build-essential checkinstall libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev libffi-dev zlib1g-dev libpcap-dev xz-utils
+
+sudo apt-get install python3-pip
+
+sudo apt-get install apache2
+
+sudo apt-get install libapache2-mod-wsgi
+
+sudo apt-get install libapache2-mod-wsgi-py3
+
+sudo apt-get install git
+
+sudo pip3 install psycopg2
+
+sudo pip3 install flask
+
+sudo pip3 install sqlalchemy
+
+sudo pip3 install flask-sqlalchemy
+
+cd /opt
+sudo wget https://www.python.org/ftp/python/3.7.6/Python-3.7.6.tgz
+
+sudo tar xzf Python-3.7.6.tgz
+
+cd Python-3.7.6
+sudo ./configure --enable-optimizations
+sudo make altinstall
+
+python3.8 -V
+
+cd /opt
+sudo rm -f Python-3.8.2.tgz
+
+
+vagrant init ubuntu/trusty64
+vagrant up
+
+sudo apt-get install postgresql postgresql-contrib
+
+sudo apt-get install postgresql libpq-dev postgresql-client postgresql-client-common
+
+sudo -u postgres psql postgres
+
+\password postgres
+
+sudo -i -u postgres
+
+createuser mike -P --interactive
+
+sudo su postgres -c 'createuser -P --superuser mike'
+
+
+createdb testpython
+
+\dt
+
+\dd
+
+psql testpython
+
+
+quit
+\q
+
+sudo nano ~/.bashrc
+add
+	export PATH=/usr/lib/postgresql/9.3/bin/:$PATH
+
+source ~/.bashrc
+
+
+You then need to configure Apache to handle requests using the WSGI module. You’ll do this by editing the /etc/apache2/sites-enabled/000-default.conf file. This file tells Apache how to respond to requests, where to find the files for a particular site and much more. You can read up on everything this file can do within the Apache documentation.
+
+For now, add the following line at the end of the <VirtualHost *:80> block, right before the closing </VirtualHost> line: WSGIScriptAlias / /var/www/html/myapp.wsgi
+
+Finally, restart Apache with the sudo apache2ctl restart command.
+
+
+
+sudo a2enmod wsgi
+
+
+pushing to github
+
+	git init
+
+	git add .
+
+	git commit -m "First commit"
+
+	git remote add origin remote repository URL
+
+	git push origin master --force
+
+pulling from github
+
+	git init
+
+	git remote add origin https://github.com/USERNAME/REPOSITORY_NAME.git
+
+	git pull origin master --force
+
+
+/etc/apache2/apache2.conf
+
+	ServerName localhost
+
+/etc/apache2/sites-enabled/000-default.conf
+
+<VirtualHost *:80>
+     # Add machine's IP address (use ifconfig command)
+     ServerName 18.217.87.146
+     # Give an alias to to start your website url with
+     WSGIDaemonProcess application python-home=/var/www/html/catalog/catalog
+     WSGIProcessGroup application
+     WSGIApplicationGroup %{GLOBAL}
+     WSGIScriptAlias /catalog /var/www/html/catalog/catalog/application.wsgi
+     <Directory /var/www/html/catalog/catalog/>
+                # set permissions as per apache2.conf file
+            Options FollowSymLinks
+            AllowOverride None
+            Require all granted
+     </Directory>
+     ErrorLog ${APACHE_LOG_DIR}/error.log
+     LogLevel warn
+     CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+
+sudo chmod a+x _filename_
+sudo chmod +rw _folder_
+

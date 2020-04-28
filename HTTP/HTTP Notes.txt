@@ -1,0 +1,132 @@
+starting the server
+
+	`python -m http.server 8000
+
+server located at:
+
+	cd into a directory
+
+	http://localhost:8000
+
+look up IP ddress of hosthame
+
+	host www.google.com
+	nslookup www.google.com
+
+send a messege to the browser
+
+	inside def do_GET(self):
+	self.wfile.write("Message".encode())
+
+	to print the path:
+	self.wfile.write(self.path[1:].encode())
+
+html form:
+
+    <form action="http://localhost:8000/" method="GET">
+        <h2>Login</h2>
+        <label for="username">Username:</label>
+        <input type="text" name="username" id="username">
+        <br>
+        <label for="pw">Password:</label>
+        <input type="password" name="pw" id="pw">
+        <br>
+        <button type=submit>Log in!</button>
+    </form>
+
+parsing a query:
+
+	address = (url)
+	parts = urlparse(address)
+	query = parse_qs(parts.query)
+
+read the length of a request:
+
+	class MessageHandler(BaseHTTPRequestHandler):
+		def do_Post(self);
+			length = int(self.headers.get('Content-length', 0))
+
+read the data of a request:
+	
+			data = self.rfile.read(length).decode()
+
+extract the message field from the request data:
+
+			message = parse_qs(data)["message"][0]
+
+send the message back as a response:
+
+		        self.send_response(200)
+		        self.send_header('Content-type', 'text/plain; charset=utf-8')
+		        self.end_headers()
+		        self.wfile.write(message.encode())
+
+send HTML to server:
+	memory = [];
+	form = '''HTML CODE'''
+
+	under class MessageHandler(BaseHTTPRequestHandler):
+
+	    def do_GET(self):
+	        # First, send a 200 OK response.
+	        self.send_response(200)
+
+	        # Then send headers.
+	        self.send_header('Content-type', 'text/html; charset=utf-8')
+	        self.end_headers()
+
+	        # Then encode and send the form.
+	        self.wfile.write(form.encode())
+
+send a redirect back to start page after POST to show messages:
+	
+	under def do_POST(self):
+		# How long was the message?
+	        length = int(self.headers.get('Content-length', 0))
+
+	        # Read and parse the message
+	        data = self.rfile.read(length).decode()
+	        message = parse_qs(data)["message"][0]
+
+	        # Escape HTML tags in the message so users can't break world+dog.
+	        message = message.replace("<", "&lt;")
+
+	        # Store it in memory.
+	        memory.append(message)
+
+	        self.send_response(303)  # redirect via GET
+	        self.send_header('Location', '/')
+	        self.end_headers()
+	
+`	    def do_GET(self):
+ 	       # First, send a 200 OK response.
+ 	       self.send_response(200)
+
+	        # Then send headers.
+	        self.send_header('Content-type', 'text/html; charset=utf-8')
+	        self.end_headers()
+
+	        # Send the form with the messages in it.
+	        mesg = form.format("\n".join(memory))
+	        self.wfile.write(mesg.encode())
+
+USING A JSON API
+
+	import requests
+
+	def SampleRecord():
+	    r = requests.get("http://uinames.com/api?ext&region=United%20States",
+	                     timeout=2.0)
+	    j = r.json()
+
+	    return "My name is {} {} and the PIN on my card is {}.".format(
+	        j["name"],
+	        j["surname"],
+	        j["credit_card"]["pin"]
+	    )
+
+	if __name__ == '__main__':
+	    print(SampleRecord())
+
+
+

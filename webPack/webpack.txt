@@ -1,0 +1,428 @@
+https://github.com/udacity/fend-webpack-content.git
+
+Build tools will manage all our assets so that we don’t have to by combining them all into a single file (or sometimes a few files). We create a set of rules for the build tool to follow, telling it specifically how we want each type of asset handled, and then it follows our rules, takes all the assets and bundles them into a single large file, which has everything loading in the correct order and is much easier for us to deal with. Typically, files with names like bundle or main are the result of a build tool combining many assets into one.
+
+What does it look like to write these rules for a build tool? Rules are written into config files. Just to give you a glimpse of where we’re headed, here is an example webpack config file. Don’t worry, this should look like gibberish right now, but we’re just going to take a look at a few things.
+
+
+module.exports = {
+  entry: './src/index.js',
+  output: {
+    path: path.join(__dirname, 'dist'),
+    filename: 'main.js',
+  },
+  module: {
+       rules: [
+          {
+                test: /\.js$/,
+                exclude: /node_modules/,
+                loader: "babel-loader",
+          },
+          {
+                test: /\.html$/,
+                use: [{ loader: "html-loader"}],
+                },
+                {
+                    test: /\.scss$/,
+                    use: [ 'style-loader', 'css-loader', 'sass-loader' ]
+                }
+       ]
+ },
+  plugins: [
+    new HtmlWebPackPlugin({
+           template: "./src/html/index.html",
+           filename: "./index.html",
+    })
+  ]
+}
+
+One thing to notice is that we’re in javascript land! You can see that this config file is 100% normal javascript. Webpack is entirely built with js.
+
+You can also see a whole section here in the middle titled “rules”. Not surprisingly, this is where we declare the rules that will govern our different assets. You might also have noticed that each rule targets a certain type of file with regex.
+
+
+RUN VISUAL STUDIO AS ADMINISTRATOR
+
+npm install webpack
+
+npm install webpack-cli
+
+npm i -D @babel/core @babel/preset-env babel-loader
+
+npm i -D html-webpack-plugin
+
+npm i -D webpack-dev-server
+
+npm i -D clean-webpack-plugin
+
+npm install workbox-webpack-plugin --save-dev
+
+npm install aylien_textapi
+
+npm install dotenv
+
+FOR LATER: webpack merge plugin
+
+create webpack.config.js in root
+
+
+
+
+
+webpack.dev.js (in root):
+
+const path = require('path')
+const webpack = require('webpack')
+const HtmlWebPackPlugin = require("html-webpack-plugin")
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+
+module.exports = {
+    entry: './src/client/index.js',
+    output : {
+        libraryTarget: 'var',
+        library: 'Client'
+    },
+    mode: 'development',
+    devtool: 'source-map',
+    stats: 'verbose',
+    module: {
+        rules: [
+            {
+                test: '/\.js$/',
+                exclude: /node_modules/,
+                loader: "babel-loader"
+            },
+            {
+                test: /\.scss$/,
+                use: [ 'style-loader', 'css-loader', 'sass-loader' ]
+            }
+        ]
+    },
+    plugins: [
+        new HtmlWebPackPlugin({
+            template: "./src/client/views/index.html",
+            filename: "./index.html",
+        }),
+        new CleanWebpackPlugin({
+            // Simulate the removal of files
+            dry: true,
+            // Write Logs to Console
+            verbose: true,
+            // Automatically remove all unused webpack assets on rebuild
+            cleanStaleWebpackAssets: true,
+            protectWebpackAssets: false
+        })
+    ]
+}
+
+
+
+
+
+
+
+
+
+
+webpack.prod.js (in root):
+
+const path = require('path')
+const webpack = require('webpack')
+const HtmlWebPackPlugin = require("html-webpack-plugin")
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
+const TerserPlugin = require('terser-webpack-plugin')
+const WorkboxPlugin = require('workbox-webpack-plugin')
+
+module.exports = {
+    entry: './src/client/index.js',
+    output : {
+        libraryTarget: 'var',
+        library: 'Client'
+    },
+    mode: 'production',
+    optimization: {
+        minimizer: [new TerserPlugin({}), new OptimizeCSSAssetsPlugin({})],
+    },
+    module: {
+        rules: [
+            {
+                test: '/\.js$/',
+                exclude: /node_modules/,
+                loader: "babel-loader"
+            },
+            {
+                test: /\.scss$/,
+                use: [ MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader']
+            }
+        ]
+    },
+    plugins: [
+        new HtmlWebPackPlugin({
+            template: "./src/client/views/index.html",
+            filename: "./index.html",
+        }),
+        new MiniCssExtractPlugin({filename: '[name].css'}),
+        new WorkboxPlugin.GenerateSW()
+    ]
+}
+
+
+
+
+
+
+
+
+
+
+package.json:
+
+{
+  "name": "example-project",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/server/index.js",
+    "build-prod": "webpack --config webpack.prod.js",
+    "build-dev": "webpack-dev-server --config webpack.dev.js --open"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "express": "^4.17.1",
+    "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.10"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.8.4",
+    "@babel/preset-env": "^7.8.4",
+    "babel-loader": "^8.0.6",
+    "html-webpack-plugin": "^3.2.0",
+    "webpack-dev-server": "^3.10.3"
+  }
+}
+
+
+
+
+/src/client/index.js
+
+import { checkForName } from './js/nameChecker';
+import { handleSubmit } from './js/formHandler';
+import './styles/resets.scss';
+import './styles/base.scss'
+import './styles/form.scss'
+import './styles/footer.scss'
+import './styles/header.scss'
+
+
+export {
+    checkForName,
+    handleSubmit
+}
+
+
+
+
+src/views/index.html:
+
+
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title>Test</title>
+        <link rel="stylesheet" href="/styles/resets.scss">
+        <link rel="stylesheet" href="/styles/base.scss">
+        <link rel="stylesheet" href="/styles/header.scss">
+        <link rel="stylesheet" href="/styles/form.scss">
+        <link rel="stylesheet" href="/styles/footer.scss">
+    </head>
+
+    <body>
+
+        <header>
+            <div class="">
+                Logo
+            </div>
+            <div class="">
+                navigation
+            </div>
+        </header>
+
+        <main>
+            <section>
+                <form class="" onsubmit="return Client.handleSubmit(event)">
+                    <input id="name" type="text" name="input" value="" onblur="onBlur()" placeholder="Name">
+                    <input type="submit" name="" value="submit" onclick="return handleSubmit(event)" onsubmit="return handleSubmit(event)">
+                </form>
+            <section>
+
+            <section>
+                <strong>Form Results:</strong>
+                <div id="results"></div>
+            </section>
+        </main>
+
+        <footer>
+            <p>This is a footer</p>
+        </footer>
+
+    </body>
+    <script>
+        // Check that service workers are supported
+        if ('serviceWorker' in navigator) {
+            // Use the window load event to keep the page load performant
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js');
+            });
+        }
+    </script>
+</html>
+
+
+MAYBE FOR LATER:
+
+      <script type="text/javascript" src="../../../dist/main.js"></script>
+
+
+
+
+in root >>> .babelrc
+
+{ 'presets' : ['@babel/preset-env'] } 
+
+
+
+
+
+/src/client/js/formHandler.js
+
+function handleSubmit(event) {
+    event.preventDefault()
+
+    // check what text was put into the form field
+    let formText = document.getElementById('name').value
+    Client.checkForName(formText)
+
+    console.log("::: Form Submitted :::")
+    fetch('http://localhost:8080/test')
+    .then(res => res.json())
+    .then(function(res) {
+        document.getElementById('results').innerHTML = res.message
+    })
+}
+
+export { handleSubmit }
+
+
+
+/src/client/js/nameChecker.js
+
+function checkForName(inputText) {
+    console.log("::: Running checkForName :::", inputText);
+    let names = [
+        "Picard",
+        "Janeway",
+        "Kirk",
+        "Archer",
+        "Georgiou"
+    ]
+
+    if(names.includes(inputText)) {
+        alert("Welcome, Captain!")
+    }
+}
+
+export { checkForName }
+
+
+
+
+
+
+src/server/index.js
+
+var path = require('path')
+const express = require('express')
+const mockAPIResponse = require('./mockAPI.js')
+
+const app = express()
+
+app.use(express.static('dist'))
+
+console.log(__dirname)
+
+app.get('/', function (req, res) {
+    res.sendFile('dist/index.html', { root: __dirname + '/.' })
+})
+
+// designates what port the app will listen to for incoming requests
+const port = 8000;
+
+app.listen(port, function () {
+    console.log(`Example app listening on port ${port}!`)
+})
+
+app.get('/test', function (req, res) {
+    res.send(mockAPIResponse)
+})
+
+
+
+
+
+
+
+If you were told to install a node module called awesomest-linter for your development dependencies, what command would you write?
+
+There are a handful of valid solutions here.
+npm install --dev awesomest-linter
+yarn add --dev awesomest-linter
+npm i -D awesomest-linter
+yarn add -D awesomest-linter
+
+
+
+
+
+
+What webpack loader regex rule would you write to find all css files?
+
+The rule should contain .css$.
+
+
+
+
+
+
+delete dist folder
+rm -rf dist
+
+
+
+
+
+
+
+
+
+The last core Webpack concept we’re going to cover is Mode. When you build, you probably noticed the warning:
+
+WARNING in configuration
+The 'mode' option has not been set, webpack will fallback to 'production' for this value.
+The issue is that we haven’t told webpack which mode to run in. Modes won’t make sense until we delve into environments. You have probably already come across the idea of environments in code projects, or at least heard mention of a “development” or “prod” environment. But in order to use webpack to its true potential, we have to fully understand these concepts.
+
+Production vs. Development Environments
+Developers refer to the various “states” of a website as environments. When we are developing a website, we call it the development environment - we run the server on localhost and use tools that are specifically convenient for us as developers. On the other hand, there is a production environment, which is our code on a server and where we can tune every tool and file for optimal efficiency, thereby giving our users the best experience when they use the webpage. There can be many environments for a project, like a testing environment or review environment, but we are going to focus on development and production for now.
+
+There are lots of tools that aim to make writing code easier for developers. One of these tools, called “sass”, we will cover in a future lesson, but for now just know that it is css with some developer friendly syntax and features. It’s great that we have tools that make development easier, but if you take sass as an example - we can’t run sass on a server. All our sass files have to be run through a transpiler in order to become css that can go on a live webpage. No matter how awesome a development tool is, in the end our code will be judged by how well it runs on a server, and oftentimes what is best for the server is the opposite of what is convenient for developers. So how do we handle both of these environments? By utilizing build tools, we can make code that is convenient for our dev team, without sacrificing speed on the server.
+
+One of the awesome features of webpack, is that it lets us apply configurations to our code based on the environment we are running. We can create a development environment (MODE in webpack) and run totally different loaders and plugins than we do for production mode.
+
+Now we have learned the second part of why we use build tools. First, we learned that build tools allow devs to use the tools that are more convenient for them. The other side of that coin is that build tools simultaneously allow devs to optimize code for the server. Build tools like Webpack are one tool we can use to help us with organization in all environments. If that doesn’t fully make sense now, don’t worry too much, it will become more clear as we go along.

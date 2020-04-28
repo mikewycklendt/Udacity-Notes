@@ -1,0 +1,59 @@
+see the shortname for remote repositories
+
+	git remote
+
+see the full url for the repository
+
+	git remote -v
+
+create a remote repository
+
+	git remote add (shortname-origin) (url)
+
+send project to github
+
+	git push (shortname) (branch)
+
+pulling a branch from github
+
+	git pull (shortname-origin) (branch to pull)
+
+retrieve commits from github without merging into master
+
+	git fetch (shortname-origin) (branch to fetch)
+
+display commits sorted by author
+
+	git shortlog
+
+show just the number of commits each author made:
+
+	git shortlog -s -n
+
+view commits just by one author
+
+	git log --author=(author "author" if there are spaces)
+
+search through commits
+
+	git log --grep=(word "word" if spacing)
+	git log --grep (word "word" if spacing)
+
+pull requests:
+
+https://classroom.udacity.com/nanodegrees/nd004/parts/fe81273e-394c-492a-892e-664bd3cc9d4a/modules/52c93310-7bd7-4c47-a17f-7af42cfb54d6/lessons/e295524f-87b6-4981-af74-6b20231dc7c1/concepts/9c0c0dd5-225e-44a4-9257-a584a7829207
+
+to keep up to date with changes of source repository
+
+	git remote add upstream (url of source repository)
+
+renaming remotes:
+
+	git remote rename (new name) (original name)
+
+retrieving upstream changes
+
+	git fetch upstream master
+
+
+

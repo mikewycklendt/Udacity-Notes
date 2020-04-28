@@ -1,0 +1,23 @@
+setting a cookie:
+
+	from http.cookies import SimpleCookie, CookieError
+
+	out_cookie = SimpleCookie()
+	out_cookie["bearname"] = "Smokey Bear"
+	out_cookie["bearname"]["max-age"] = 600
+	out_cookie["bearname"]["httponly"] = True
+
+send in header:
+
+	self.send_header("Set-Cookie", out_cookie["bearname"].OutputString())
+
+to read a cookie:
+
+	in_cookie = SimpleCookie(self.headers["Cookie"])
+	in_data = in_cookie["bearname"].value
+
+if cookie contains HTML characters 
+	use the html.escape function, from the built-in html module
+
+	from html import escape as html_escape
+	html_escape(cookie-variable-name)

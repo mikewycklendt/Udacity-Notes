@@ -1,0 +1,187 @@
+automatically compare files (windows):
+
+	FC
+
+	gitbash:
+		
+		diff -u
+
+
+setting up a brogram with bashrc:
+
+	echo 'alias subl="C:/Program\ Files/Sublime\ Text\ 2/sublime_text.exe"' >> ~/.bashrc
+
+	restart >>> run source ~/.bashrc 
+
+running the program:
+
+	type in alias you set above
+
+adding a line to a file in gitbash
+
+	echo 'line you want to add' >>(path)/(filename)
+
+
+checking commits:
+
+	navigate to directory:
+		cd (path)/
+	git log
+
+to view the differences between two versions:
+
+	git diff (ID1) (ID2)
+
+statistics about which files have changed in each commit
+
+	git log --stat
+
+cloning a repository:
+
+	git clone followed by space and repository url
+
+to checkout a commit
+
+	git checkout (ID)
+
+changing the text editor:
+
+	git config --global core.editor "'C:/Program Files/Sublime Text 2/sublime_text.exe' -n -w" 
+
+two useful git commands:
+
+	git config --global push.default upstream
+	git config --global merge.conflictstyle diff3
+
+
+comparing two different files
+
+	git diff -u (file1) (file2)
+
+check to see what is in a directory
+
+	ls -a
+
+create a repository
+
+	git init
+
+show which files have chenged since last commit
+
+	git status
+
+add files to the staging area
+
+	git add
+
+to commit:
+
+	git commit
+
+types for git commit messages:
+
+	feat: a new feature
+	fix: a bug fix
+	docs: changes to documentation
+	style: formatting, missing semi colons, etc; no code change
+	refactor: refactoring production code
+	test: adding tests, refactoring test; no production code change
+	chore: updating build tasks, package manager configs, etc; no production code change
+
+showing differences between files in staging area
+
+	git diff --staged
+
+reset changes
+
+	git reset --hard
+
+show current branches
+
+	git branch
+
+create new branch
+
+	git branch (new branch name)
+
+switch branch
+
+	git checkout (branch name)
+
+to see a visual representation of commit history:
+
+	git log --graph --oneline (branch1) (branch2)
+
+creating a new branch and working on it
+
+	git checkout -b (new branch name)
+
+merging two branches
+
+	git merge (branch1) (branch2)
+
+	to merge into master
+		checkout master branch
+		git merge master (other branch)
+
+show the differences between commit and its parent
+
+	git show (ID)
+
+delete a branch
+
+	git branch -d (branch name)
+
+show a certain number of commits:
+
+	git log -n (number of commits)
+
+setting up a github repository
+
+	git remote add origin https://github.com/wixmmm/reflections.git
+	git push -u origin master
+
+pull from remote
+
+	git pull origin (branch)
+
+cloning from github
+
+	git clone (url)
+
+adding collaberators
+
+	go to repository on github
+	settings
+	collaborators
+
+updating just logally
+
+	git fetch origin master
+
+SEE LESSON 3 QUIZ: MAKING A PULL REQUEST
+
+git branch -a
+		list branches
+
+git checkout {branch-name}
+
+pushing to github
+
+	git init
+
+	git add .
+
+	git commit -m "First commit"
+
+	git remote add origin remote repository URL
+
+	git push origin master
+
+pulling from github
+
+	git init
+
+	git remote add origin https://github.com/USERNAME/REPOSITORY_NAME.git
+
+	git pull origin master

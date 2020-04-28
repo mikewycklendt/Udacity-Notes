@@ -1,0 +1,380 @@
+Strings:
+
+	"string"
+
+alert:
+
+	alert("alert message");
+
+console.log is used to display content to the JavaScript console:
+
+	console.log("hiya friend!");
+
+change color of header:
+
+	document.getElementsByTagName("h1")[0].style.color = "#ff0000";
+
+comments:
+
+	//
+
+setting a variable:
+
+	var variablename = "string" or int;
+
+index of a string:
+
+	variable[index]
+
+escaping characters:
+
+	\\	\ (backslash)
+	\"	'' (double quote)
+	\'	' (single quote)
+	\n	newline
+	\t	tab
+
+strict equality:
+
+	"1" === 1
+		>>> false
+	"1" !== 1
+		>>> true
+
+
+if else:
+
+	if(money >= price) {
+		console.log("buy the hammer");
+	} else {
+		console.log("don't buy the hammer");
+	}
+
+
+	if (weather === "snow") {
+	  console.log("Bring a coat.");
+	} else if (weather === "rain") {
+	  console.log("Bring a rain jacket.");
+	} else {
+	  console.log("Wear what you have on.");
+}
+
+two conditional statements in an if statemnt
+	if(money >= price && product === "good") {
+		console.log("buy the hammer");
+	} 
+
+
+
+&&	Logical AND	value1 && value2	
+||	Logical OR	value1 || value2	
+!	Logical NOT	!value1	Returns the opposite 
+			of value1. If value1 is true, 
+	`		then !value1 is false.
+
+Here’s the list of all of the falsy values:
+	the Boolean value false
+	the null type
+	the undefined type
+	the number 0
+	the empty string ""
+	the odd value NaN (stands for "not a number"
+
+Here are some other examples of truthy values:
+	true
+	42
+	"pizza"
+	"0"
+	"null"
+	"undefined"
+	{}
+	[]
+
+	var isGoing = true;
+	var color = isGoing ? "green" : "red";
+	console.log(color);
+		Prints: "green"
+
+switch statement--alternative to else if
+	
+	var option = 3;
+	
+	switch (option) {
+	  case 1:
+	    console.log("You selected option 1.");
+	  case 2:
+	    console.log("You selected option 2.");
+	  case 3:
+	    console.log("You selected option 3.");
+	  case 4:
+	    console.log("You selected option 4.");
+	  case 5:
+	    console.log("You selected option 5.");
+	  case 6:
+	    console.log("You selected option 6.");
+	}
+
+	>>> You selected option 3
+	    You selected option 4
+	    You selected option 5
+	    You selected option 6
+
+
+
+	var option = 3;
+
+	switch (option) {
+	  case 1:
+	    console.log("You selected option 1.");
+	    break;
+	  case 2:
+	    console.log("You selected option 2.");
+	    break;
+	  case 3:
+	    console.log("You selected option 3.");
+	    break;
+	  case 4:
+	    console.log("You selected option 4.");
+	    break;
+	  case 5:
+	    console.log("You selected option 5.");
+	    break;
+	  case 6:
+	    console.log("You selected option 6.");
+	    break; // technically, not needed
+	}
+
+	>>> You selected option 3
+
+while loops:
+
+	var start = 0; // when to start
+	while (start < 10) { // when to stop
+	  console.log(start);
+	  start = start + 2; // how to get to the next item
+	}
+	>>> 0
+	    2
+     	    4
+	    6
+	    8
+
+for loops:
+
+	for ( start; stop; step ) {
+	 // do this thing
+	}
+
+	for (var i = 0; i < 6; i = i + 1) {
+	  console.log("Printing out i = " + i);
+	}
+
+x++ -- returns x then increments it
+++x - increments x right away
+
+x = 10;
+x *= 8;
+>>>80
+
+defining a function:
+
+	function doubleGreeting(name, otherName) {	
+	  // code to greet two people!
+	  return ______;
+	}
+
+
+callback functions:
+
+	var catSays = function(max) {
+	  var catMessage = "";
+	  for (var i = 0; i < max; i++) {
+	    catMessage += "meow ";
+	  }
+	  return catMessage;
+	};
+
+	// function declaration helloCat accepting a callback
+	function helloCat(callbackFunc) {
+	  return "Hello " + callbackFunc(3);
+	}
+	
+	// pass in catSays as a callback function
+	helloCat(catSays);
+
+inline function expressions:
+
+	// Function expression that assigns the function displayFavorite 
+	// to the variable favoriteMovie
+	var favoriteMovie = function displayFavorite(movieName) {
+	  console.log("My favorite movie is " + movieName);
+	};
+
+	// Function declaration that has two parameters: a function for displaying
+	// a message, along with a name of a movie
+	function movies(messageFunction, name) {
+	  messageFunction(name);
+	}
+
+	// Call the movies function, pass in the favoriteMovie function and name of movie
+	movies(favoriteMovie, "Finding Nemo");
+
+arrays:
+
+	var donuts = ["glazed", "powdered", "sprinkled"];
+	console.log(donuts[0]); // "glazed" is the first element in the `donuts` array
+
+array length:
+
+	var donuts = ["glazed", "powdered", "sprinkled"];
+	console.log(donuts.length);
+	>>> 3
+
+adding elements to an array:
+
+	donuts.push("powdered"); // pushes "powdered" onto the end of the `donuts` array
+	>>> returns length of array after the element has been added
+
+removing last element of an array:
+
+	donuts.pop();
+	`>>> returns element popped
+
+removing the first element in an array:
+
+	donuts.shift();
+
+combine elements of an array into a string:
+
+	donuts.join('');
+
+
+
+adding elements somewhere within an array
+
+	var donuts = ["glazed", "chocolate frosted", "Boston creme", "glazed cruller"];
+	donuts.splice(1, 1, "chocolate cruller", "creme de leche"); 
+	// removes "chocolate frosted" at index 1 and adds "chocolate cruller" and 
+	   "creme de leche" starting at index 1
+
+	Returns: ["chocolate frosted"]
+	donuts array: ["glazed", "chocolate cruller", "creme de leche", "Boston creme", 
+			"glazed cruller"]
+
+	The first argument represents the starting index from where you want 
+	to change the array, the second argument represents the numbers of 
+	elements you want to remove, and the remaining arguments represent 
+	the elements you want to add.
+
+	IF THE FIRST NUMBER IS NEGETIVE IT COUNTS FROM THE BACK
+
+
+array loops:
+
+	var donuts = ["jelly donut", "chocolate donut", "glazed donut"];
+	
+	// the variable `i` is used to step through each element in the array
+	for (var i = 0; i < donuts.length; i++) {
+	    donuts[i] += " hole";
+	    donuts[i] = donuts[i].toUpperCase();
+	>>>donuts array: ["JELLY DONUT HOLE", "CHOCOLATE DONUT HOLE", "GLAZED DONUT HOLE"]
+
+make everything uppercase:
+
+	donuts.toUpperCase();
+
+for each function for arrays
+
+	var donuts = ["jelly donut", "chocolate donut", "glazed donut"];
+
+	donuts.forEach(function(donut) {
+	  donut += " hole";
+	  donut = donut.toUpperCase();
+	  console.log(donut);
+	});
+
+
+	words = ["cat", "in", "hat"];
+	words.forEach(function(word, num, all) {
+	  console.log("Word " + num + " in " + all.toString() + " is " + word);
+	});
+
+	Prints:
+	Word 0 in cat,in,hat is cat
+	Word 1 in cat,in,hat is in
+	Word 2 in cat,in,hat is hat
+
+creating a new array based on an older array:
+
+	var donuts = ["jelly donut", "chocolate donut", "glazed donut"];
+
+	var improvedDonuts = donuts.map(function(donut) {
+	  donut += " hole";
+	  donut = donut.toUpperCase();
+	  return donut;
+	});
+
+	donuts array: ["jelly donut", "chocolate donut", "glazed donut"]
+	improvedDonuts array: ["JELLY DONUT HOLE", "CHOCOLATE DONUT HOLE", 
+				"GLAZED DONUT HOLE"]
+
+converting a string to a number:
+
+	Number();
+
+2d arrays:
+
+	var donutBox = [
+	  ["glazed", "chocolate glazed", "cinnamon"],
+	  ["powdered", "sprinkled", "glazed cruller"],
+	  ["chocolate cruller", "Boston creme", "creme de leche"]
+	];
+
+	// here, donutBox.length refers to the number of rows of donuts
+	for (var row = 0; row < donutBox.length; row++) {
+	  console.log(donutBox[row]);
+	}
+	Prints:
+	["glazed", "chocolate glazed", "cinnamon"]
+	["powdered", "sprinkled", "glazed cruller"]
+	["chocolate cruller", "Boston creme", "creme de leche"]
+
+
+return datatype
+
+	type of "hello" >>> string
+
+drfining an abject with its own values:
+
+	var sister = {
+	  name: "Sarah", 
+	  age: 23,
+	  parents: [ "alice", "andy" ],
+	  siblings: ["julia"],
+	  favoriteColor: "purple",
+	  pets: true
+	};
+
+retrieving information from an object:
+
+	sister["parents"] // returns [ "alice", "andy" ]
+	sister.parents // also returns ["alice", "andy"]
+
+for each with objects within an array:
+
+var donuts = [
+    
+    { type: "Jelly", cost: 1.22 },
+    
+    { type: "Chocolate", cost: 2.45 },
+    
+    { type: "Cider", cost: 1.59 },
+    
+    { type: "Boston Cream", cost: 5.99 }
+]
+
+	donuts.forEach(function(donut) {
+    
+		console.log(donut.type + " donuts cost $" + donut.cost + " each");
+
+	});

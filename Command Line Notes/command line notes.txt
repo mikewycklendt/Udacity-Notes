@@ -1,0 +1,193 @@
+list the contents of a directory
+
+	ls
+
+long listing contents of a directory
+
+	ls -l
+
+long listing breakdown
+
+	(type)(security) (owner) (group) (size) (last modified) (name)
+
+	type: - = file, d = directory
+	security: rwx-rwx-rwx- (owner)(group)(other)
+		r = read
+		w - write
+		x - execute
+		- - permission removed
+
+
+
+view the contents of a file
+
+	more (filename)
+
+create a directory
+
+	mkdir dogs
+
+move a file
+
+	mv (filename) (directory name)
+
+change directory
+
+	cd (directory)
+
+print working directory
+
+	pwd
+
+change to previous directory
+
+	cd ..
+
+working with pathnames
+
+	(command) /(directory)/directory
+	(command) ../(directory)/(directory)
+
+copy a file
+
+	cp (filename) (new filename)
+
+delete a file
+
+	rm (filename)
+
+delete a directory
+
+	rmdir (directory)
+
+to remove a directory and all it's contents
+
+	rm -r (directory name)
+
+changing permissions:
+
+	chmod (user)+(permission/permissions) (filename)
+		u - user
+		g - group
+		o - other
+
+	*(end of filename) - anything before end of filename matches
+	* - all files in a directory
+	? - wildcard, one ? for each unspecified character
+
+list groups you're in
+
+	groups
+
+to look up a command in the manual
+
+	man (command)
+
+search the manual
+
+	man -k (keyword)
+
+search for a user's userID
+
+	finger (user's name)
+
+shortcut for home directory
+
+	~
+
+changing directory to user's home directory
+
+	cd ~(userID)
+
+searching for a file:
+
+	find (directory) -name (filename)   -- if using wildcard, put in quotes: "(filename)?"
+
+	. : searches the current directory
+
+view combined files
+
+	cat (filename) (filename) (filename)
+
+to send contents of a file to new file or overwrite existing one
+
+	cat (filename) (filename) > (filename)
+
+to append files to an existing file:
+
+	cat (filename) (filename) >> (path)/(filename)
+
+print a file to default printer:
+
+	lpr (filename)
+
+send to another printer
+
+	lpr -P (other printer name) (filename)
+
+to view the print queue for default printer
+
+	lpq
+
+to view the print queue for another printer
+
+	lpq -P (printer name)
+
+remove a file from the print queue
+
+	lprm -P (printer name) (print job number)
+
+to copy a directory
+
+	cp -r /(path)/(directory) /(path)/(directory)
+
+to see how much disk space you have left
+
+	df
+
+to see how much disk space is free on the hard drive a folder is in
+
+	df /(path)/(directory)
+	or:
+	df . (for current directory)
+	df ~ (for home directory)
+
+to view all running processes
+
+	ps aux
+
+to pipe two files
+
+	cat (filename) (filename) | lpr -P (printer name) -- prints two files together
+
+to display lines in files containing a word:
+
+	cat (filename) (filename) | grep (word)
+
+to display lines in a file containing a word:
+
+	grep (word) (filename)
+
+to find a process containing a word:
+
+	ps aux | grep (word)
+
+to kill a process 
+
+	kill (PID)
+
+to kill a procwss before it has a chance to clean itself up:
+
+	kill -9 (PID)
+
+
+
+
+
+
+
+
+
+
+
+

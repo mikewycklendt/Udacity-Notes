@@ -1,0 +1,38 @@
+download heroku cli:
+
+	https://devcenter.heroku.com/articles/heroku-cli
+
+log in:
+
+	heroku login
+
+create 3 files:
+
+	requirements.txt:
+		requests>=2.12
+	runtime.txt:
+		python-3.7.3
+	Procfile:
+		web: python BookmarkServer.py
+
+in code:
+
+	import os
+	import threading
+	from socketserver import ThreadingMixIn
+
+	if __name__ == '__main__':
+	    port = int(os.environ.get('PORT', 8000))
+	    server_address = ('', port)
+	    httpd = ThreadHTTPServer(server_address, Shortener)
+	    httpd.serve_forever()
+
+create heroku app:
+
+	heroku create your-app-name
+
+push to heroku
+
+	git push heroku master
+
+

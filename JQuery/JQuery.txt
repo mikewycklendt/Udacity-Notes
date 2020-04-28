@@ -1,0 +1,212 @@
+HOSTING JQuery:
+
+	Local:
+		<script src'js/jquery.min.js'></script>
+
+	jQuery official:
+		<script src='//code.jquery.com/jquery-1.11.1.min.js'></script>
+
+	Content delivery Network (like google)
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+	MICROSOFT CDN:
+		<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
+
+	JQuery selectors:
+		$('tag')
+		$('.class')
+		$('#id')
+
+	VIEWING OBJECTS:
+		var listElements;
+		listElements = $('li');
+		console.log(listElements)
+
+	CALLING OBJECTS IN A TREE:
+		$('#id').parent() -- one level up
+		$('#id').parents() -- multiple levels up
+		$('#id').children() -- one level down
+		$('#id').find() -- multiple levels down
+		$('#id').siblings() -- ids with same parent
+
+	TOGGLE CLASS
+
+		var featured;
+		featured = $('.featured');
+		featured.toggleClass('featured');
+
+		var article2, article3;
+		article2 = $('.featured');
+		article3 = article2.next();
+		article2.toggleClass('featured');
+		article3.toggleClass('featured');
+
+	CHANGING ATTRIBUTES:
+		var navList, firstItem, link;
+		navList = $('.nav-list');
+		firstItem = navList.children();
+		link = firstItem.find('a');
+		link.attr('href', '#1')
+
+	MODIFYING CSS:
+		var articleItems;
+		articleItems = $('.article-item');
+		articleItems.css('font-size', '20px')
+
+	COLLECTING VALUES AND CHANGING TEXT
+		$('#input').on('change', function() {
+			var val, h1;
+			val = $('#input').val();
+			h1 = $(''.articles).children('h1');
+			h1.text(val);
+		});
+
+	REMOVING DOM ELEMENTS:
+		var articleItems, ul;
+		articleItems = $('.article-item');
+		ul = articleItem.find('ul');
+		ul.remove();
+
+	REMOVING SPECIFIC DOM ELEMENTS:
+		var articleItems, ul;
+		articleItems = $('.article-item');
+		ul = articleItems.find('ul');
+		ul.children().remove('.bold');
+
+	APPENDING CHILD ELEMENTS:
+		var firstArticleItem;
+		firstArticleItem = $('.article-item').first();
+		firstArticleItem.append('<img src="image'>);
+			??? adds image after
+		firstArticleItem.prepend('<img src="image">');
+			>>> adds image at beginning
+
+	BUILDING A DOM TREE:
+		var family1, family2, bruce, madison, hunter;
+		family1 = $('#family1');
+		family2 = $('<div id="family2"><h1>Family 2</h1></div>');
+		bruce = $('div id="bruce"><h2>Bruce</h2></div>');
+		madison = $('<div id="madison"><h3>Madison</h3>');
+		hunter = $('<div id="hunter"><h3>Hunter</h3></div>');
+		family2.insertAfter(family1);
+		family2.append(bruce);
+		bruce.append(madison);
+		bruce.append(hunter);
+
+	REPLACING AN IMAGE FILE:
+
+	index.html
+
+		<head>
+	    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	    <script src="app.js"></script>
+	    <meta charset="UTF-8">
+		</head>
+
+	app.js
+
+		$(function(){
+		    $('img').attr('src', 'http://lorempixel.com/350/150/animals/');
+		})
+
+	MONITORING EVENTS ON CHROME
+
+		monitorEvents(elementToWatch);
+
+		var inputFields = jQuery( 'input' );
+		var firstInput = inputFields[0];
+		monitorEvents( firstinput );
+
+		right click --> inspect
+		monitorEvents($0);
+
+	 CHANGING THE BACKGROUND COLOR BY KEYPRESS IN AN INPUT FIELD:
+
+	 	$( '#my-input' ).on('keypress', function() {
+	 		$( 'body' ).css('background-color', '#2727FF')
+	 	}
+
+	 ADDING A MESSAGE TO THE BODY AFTER CLICKING BUTTON:
+
+	 	$('#my-button').on('click', function(){
+	 		$('#my-button').remove();
+	 		$('body').addClass('success');
+	 	})
+
+	 CHANGING THE BACKGROUND OF AN ELEMENT ON A CLICK:
+
+	 	$('article').on('click', function( evt ) {
+	 		$(evt.target).css('background', 'red');
+	 	});
+
+	 PREVENTING A LINK FROM HAPPENING:
+
+	 	$('#myAnchor').on('click', function( evt ) {
+	 		evt.preventDefault();
+	 		console.log('You clicked a link!');
+	 	});
+
+	 EVENT ON KEYPRESS:
+
+	 	$('input').keypress(function() {
+	 		function
+	 	});
+
+	 HOVER:
+
+	 	$( selector ).mouseenter( handlerIn ).mouseleave( handlerOut );
+
+	 CONVIENIENCE METHODS:
+
+	 	target.keyup(...);
+	 	target.mouseover(...);
+	 	target.change(...);
+	 	target.click(...);
+
+	 EVENT DELEGATION:
+
+	 	$( '.container' ).on( 'click', 'article', function() {
+	 		$( 'body' ).addClass( 'selected' );   
+	 	});
+
+	 	index.html:
+
+	 		<ul id="rooms">
+    		<li>Room 1</li>
+    		<li>Room 2</li>
+            .
+            .
+            .
+    		<li>Room 999</li>
+    		<li>Room 1000</li>
+		</ul>
+
+		app.js:
+
+		$( '#rooms li' ).on( 'click', function() {
+    		...
+		});
+
+		OR:
+
+		$( '#rooms' ).on( 'click', 'li', function() {
+    		...
+		});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,1545 @@
+quit
+\q
+
+createdb -T template0 dbname
+
+create a new database
+createdb databasename
+
+delete a database
+dropdb databasename
+
+reset a database
+dropdb databasename && createdb databasename
+
+# \l
+
+List all databases on the server, their owners, and user access levels
+
+# \c <dbname>
+
+Connect to a database named
+
+# \dt
+
+Show database tables
+
+# \d <tablename>
+
+Describe table schema
+
+# \q
+
+Quit psql, return to the terminal
+
+# \?
+
+Get help, see list of available commands
+
+sudo -u vagrant psql example
+
+create table table1 (
+	id 	INTEGER PRIMARY KEY,
+	description VARCHAR NOT NULL);
+
+
+MANIPULATING DATA
+
+	INSERT
+	UPDATE
+	DELETE
+
+QUERYING DATA
+
+	SELECT
+
+STRUCTURING DATA
+
+	CREATE TABLE
+	ALTER TABLE
+	DROP TABLE
+
+	ADD COLUMN
+	DROP COLUMN
+
+JOINS GROUPINGS
+
+	JOIN
+	INNER JOIN
+	LEFT JOIN
+	RIGHT JOIN
+
+	GROUP BY
+	SUM
+	COUNT
+
+
+INSERT INTO table1 (id, description) VALUES (1, 'this is a thing');
+
+SELECT * from table1 WHERE id = 1;
+
+
+
+
+
+
+
+
+
+
+
+
+
+PostgreSQL INSERT syntax
+
+
+The following illustrates the syntax of the INSERT statement:
+
+
+INSERT INTO table(column1, column2, …)
+VALUES
+   (value1, value2, …);
+First, you specify the name of the table that you want to insert a new row after the INSERT INTO clause, followed by a comma-separated column list.
+
+Second, you list a comma-separated value list after the VALUES clause. The value list must be in the same order as the columns list specified after the table name.
+
+To add multiple rows into a table at a time, you use the following syntax:
+
+
+INSERT INTO table (column1, column2, …)
+VALUES
+   (value1, value2, …),
+   (value1, value2, …) ,...;
+You just need to add additional comma-separated value lists after the first list, each value in the list is separated by a comma (,).
+
+To insert data that comes from another table, you use the INSERT INTO SELECT statement as follows:
+
+
+INSERT INTO table(column1,column2,...)
+SELECT column1,column2,...
+FROM another_table
+WHERE condition;
+The WHERE clause is used to filter rows that allow you to insert partial data from the another_table into the table.
+
+PostgreSQL INSERT examples
+Let’s create a new table named linkfor the demonstration.
+
+
+CREATE TABLE link (
+   ID serial PRIMARY KEY,
+   url VARCHAR (255) NOT NULL,
+   name VARCHAR (255) NOT NULL,
+   description VARCHAR (255),
+   rel VARCHAR (50)
+);
+
+
+
+
+
+
+
+
+PostgreSQL UPDATE syntax
+To change the values of the columns in a table, you use the UPDATE statement. The following illustrates the syntax of the UPDATE statement:
+
+
+UPDATE table
+SET column1 = value1,
+    column2 = value2 ,...
+WHERE
+   condition;
+Let’s examine the syntax of the statement in detail:
+
+First, specify the table name where you want to update the data after UPDATE clause.
+
+Second, list the columns whose values you want to change in the SET clause. If you update values in multiple columns, you use a comma (,) to separate each pair of column and value. The columns that are not on the list retain their original values.
+
+Third, determine which rows you want to update in the condition of the WHERE clause. If you omit the WHERE clause, all the rows in the table are updated.
+
+PostgreSQL UPDATE examples
+We will use the linktable created in the INSERT tutorial for the demonstration.
+
+Let’s examine the content of the linktable:
+
+
+SELECT
+   *
+FROM
+   link;
+PostgreSQL update example
+
+PostgreSQL update table partially example
+To change the NULL values of the last_updatecolumn to the current date, you use the following statement:
+
+
+UPDATE link
+SET last_update = DEFAULT
+WHERE
+   last_update IS NULL;
+PostgreSQL update table partially
+
+The WHEREclause only updates the rows whose values in the last_updatecolumn is NULL. We used the DEFAULT keyword because the last_update column accepts the current date as the default value.
+
+PostgreSQL update all rows in a table
+To update the values of the relcolumn to nofollow for all rows in the link table, you omit the WHERE clause in the UPDATE statement as follows:
+
+
+UPDATE link
+SET rel = 'nofollow';
+PostgreSQL update all rows
+
+You can also update data of a column from another column within the same table. The following statement copies the values of the namecolumn to the descriptioncolumn of the linktable:
+
+
+UPDATE link
+SET description = name;
+PostgreSQL update values same table
+
+PostgreSQL update join example
+Let’s examine the link_tmp table, which has the same structure as the link table:
+link_tmp table
+
+The following statement updates values that come from the link table for the columns in the link_tmp table:
+
+
+UPDATE link_tmp
+SET rel = link.rel,
+ description = link.description,
+ last_update = link.last_update
+FROM
+   link
+WHERE
+   link_tmp.id = link.id;
+PostgreSQL UPDATE JOIN
+
+Notice that we used the FROM clause in the UPDATE statement to specify the second table ( link) that involves in the update.
+
+This kind of UPDATEstatement sometimes referred to as UPDATE JOIN or UPDATE INNER JOIN because two or more tables are involved in the UPDATE statement. The join condition is specified in the WHERE clause.
+
+PostgreSQL update with returning clause
+The UPDATEstatement returns the number of affected rows by default. The PostgreSQL UPDATE statement also returns updated entries using the RETURNINGclause. This addition is a PostgreSQL’s extension to the SQL standard.
+
+The following statement updates the row with id 1 in the linktable and returns the updated entries:
+
+
+UPDATE link
+SET description = 'Learn PostgreSQL fast and easy',
+ rel = 'follow'
+WHERE
+   ID = 1 
+RETURNING id,
+   description,
+   rel;
+PostgreSQL UPDATE RETURNING
+
+To verify the update, you can select data from the linktable as the following query:
+
+
+SELECT
+   *
+FROM
+   link
+WHERE
+   ID = 1;
+
+
+
+
+
+
+
+
+
+
+
+Introduction to PostgreSQL DELETE statement
+To delete data from a table, you use PostgreSQL DELETE statement as shown below:
+
+
+DELETE FROM table
+WHERE condition;
+In this syntax:
+
+First, specify the table from which you want to delete data in the DELETE FROM clause.
+Second, specify which rows to delete by using the condition in the WHERE clause. The WHERE clause is optional. However, if you omit it, the DELETE statement will delete all rows in the table.
+The DELETE statement returns the number of deleted rows. It may not the same as the number of rows specified by the condition in the WHERE clause because the table may contain a BEFORE DELETE trigger that does something else before deletion. If no row is deleted, the DELETE statement returns zero.
+
+In case you want to check the condition that references to one or more columns in another table, you use the USING clause as follows:
+
+
+DELETE FROM table
+USING another_table
+WHERE table.id = another_table.id AND …
+If you do not want to use the USING clause, you can use the subquery as shown in the following statement:
+
+
+DELETE FROM table
+WHERE table.id = (SELECT id FROM another_table);
+PostgreSQL DELETE examples
+We will use the linkand link_tmptables that we created in the inserting data tutorial. The following illustrates the content of the linktable:
+
+
+SELECT
+   *
+FROM
+   link;
+link table
+
+If you want to import these tables into your database for practicing, you can download the script via the following link:
+
+Download Script for Creating the Sample Tables
+
+PostgreSQL DELETE with WHERE clause example
+The following statement deletes the rows whose value in the id column is 8:
+
+
+DELETE FROM link
+WHERE id = 8;
+The statement returns a one indicated that one row has been deleted.
+
+Note that if the link table does not have any row with id 8, the DELETE statement does nothing and returns zero (0).
+
+PostgreSQL DELETE USING statement example
+Suppose you want to remove all rows from the linktable that have values of the id columns are in the link_tmptable.
+
+First, check the link_tmp table data:
+
+
+SELECT
+    *
+FROM
+    link_tmp;
+link_tmp table
+
+We expect that the rows with id 6 and 7 will be removed from the linktable:
+
+Second, use the following DELETE statement with the USING clause to delete the rows in the linktable:
+
+
+DELETE FROM link 
+USING link_tmp
+WHERE
+    link.id = link_tmp.id;
+Third, query the linktable to verify the delete operation:
+
+PostgreSQL DELETE USING example
+
+As you can see clearly from the output, the statement worked as expected.
+
+PostgreSQL deletes all rows from a table
+To delete all rows from the link table, you omit the WHEREclause in the DELETEstatement as follows:
+
+
+DELETE FROM link;
+The link table now is empty.
+
+To delete all rows in the link_tmptable and return the deleted rows, you use the RETURNING clause in the DELETEstatement as follows:
+
+
+DELETE FROM link_tmp 
+RETURNING *;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+PostgreSQL SELECT statement syntax
+Let’s start with the basic form of the SELECT statement that retrieves data from a single table.
+
+The following illustrates the syntax of the SELECT statement:
+
+
+SELECT
+   column_1,
+   column_2,
+   ...
+FROM
+   table_name;
+Let’s examine the SELECTstatement in more detail:
+
+First, specify the column of the table from which you want to query data in the SELECT clause. If you retrieve data from multiple columns, use a list of comma-separated columns. In case you want to query data from all columns, you can use an asterisk (*) as the shorthand.
+Second, specify the name of the table from which you want to query data after the FROM keyword.
+In addition to the columns from a table, you can use literal values and expressions in the SELECT clause.
+Note that the SQL language is case insensitive. It means that SELECT or select has the same effect. By convention, we will use SQL keywords in uppercase to make the code easier to read.
+PostgreSQL SELECT examples
+Let’s take a look at some examples of using PostgreSQL SELECT statement.
+
+We will use the following customers table in the sample database for the demonstration.
+
+customer table
+
+1) Using SELECT statement to query data from one column example
+This example uses the SELECT statement to find the first names of all customers in the customer table:
+
+
+SELECT 
+   first_name
+FROM 
+   customer;
+Here is the partial output:
+
+postgresql select one column example
+
+Notice that we have added a semicolon (;) at the end of the SELECT statement. The semicolon is not a part of the SQL statement. It is used to signal PostgreSQL engine the end of an SQL statement. The semicolon is also used to separate two SQL statements.
+
+2) Using SELECT statement to query data from multiple columns example
+Suppose you just want to know the first name, last name and email of customers, you can specify these column names in the SELECT clause as shown in the following query:
+
+
+SELECT
+   first_name,
+   last_name,
+   email
+FROM
+   customer;
+postgresql select customer
+
+3) Using SELECT statement to query data in all columns of a table example
+The following query uses the SELECT statement to return data from all rows and columns of the customer table:
+
+
+SELECT
+   *
+FROM
+   customer;
+postgresql select all data from customer table
+
+In this example, we used an asterisk (*) in the SELECT clause, which is a shorthand for all columns. So instead of listing all columns in the SELECT clause, we just used the asterisk (*) .
+
+However, it is not a good practice to use the asterisk (*) in the SELECT statement because of the following reasons:
+
+Imagine that you have a big table with many columns, the SELECT statement with an asterisk (*) shorthand will retrieve data from all columns of the table, which may not be necessary.
+In addition, retrieving unnecessary data from the database increases the traffic between the database and application layers. As a result, your applications will be slow and less scalable. Therefore, it is a good practice to specify the column names explicitly in the SELECT clause whenever possible to get only necessary data from a table.
+Because of these reasons, you should only use the asterisk (*) shorthand for the ad-hoc queries to examine the data of a table.
+
+3) Using SELECT statement with expressions example
+The following example uses the SELECT statement to return the full names and emails of all customers:
+
+
+SELECT 
+   first_name || ' ' || last_name AS full_name,
+   email
+FROM 
+   customer;
+Here is the partial output:
+
+postgresql select with expression example
+
+In this example, we used the concatenation operator || to concatenate first name, space, and last name of every customer. In addition, we used a column alias AS full_name to assign the expression a column heading.
+
+4) Using SELECT statement with  only expressions example
+The following example uses the SELECT statement with expression. We skip the FROM clause because the statement does not refer to any table:
+
+
+SELECT 5 * 3 AS result;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+PostgreSQL CREATE TABLE syntax
+To create a new table in PostgreSQL, you use the CREATE TABLE statement. The following illustrates the syntax of the CREATE TABLE statement:
+
+
+CREATE TABLE table_name (
+   column_name TYPE column_constraint,
+   table_constraint table_constraint
+) INHERITS existing_table_name;
+Let’s examine the syntax of the CREATE TABLE statement  in more detail.
+
+First, you specify the name of the new table after the CREATE TABLE clause. The TEMPORARY keyword is for creating a temporary table, which we will discuss in the temporary table tutorial.
+Next, you list the column name, its data type, and column constraint. A table may have multiple columns separated by a comma (,). The column constraint defines rules for the column e.g.,  NOT NULL.
+Then, after the column list, you define a table-level constraint that defines rules for the data in the table.
+After that, you specify an existing table from which the new table inherits. It means the new table contains all columns of the existing table and the columns defined in the CREATE TABLE statement. This is a PostgreSQL’s extension to SQL.
+PostgreSQL column constraints
+The following are the commonly used column constraints in PostgreSQL:
+
+NOT NULL – the value of the column cannot be NULL.
+UNIQUE – the value of the column must be unique across the whole table. However, the column can have many NULL values because PostgreSQL treats each NULL value to be unique. Notice that SQL standard only allows one NULL value in the column that has the UNIQUE constraint.
+PRIMARY KEY – this constraint is the combination of NOT NULL and UNIQUE constraints. You can define one column as PRIMARY KEY by using column-level constraint. In case the primary key contains multiple columns, you must use the table-level constraint.
+CHECK – enables to check a condition when you insert or update data. For example, the values in the price column of the product table must be positive values.
+REFERENCES – constrains the value of the column that exists in a column in another table. You use REFERENCES to define the foreign key constraint.
+PostgreSQL table constraints
+The table constraints are similar to column constraints except that they are applied to the entire table rather than to an individual column.
+
+The following are the table constraints:
+
+UNIQUE (column_list)–  to force the value stored in the columns listed inside the parentheses to be unique.
+PRIMARY KEY(column_list) – to define the primary key that consists of multiple columns.
+CHECK (condition) – to check a condition when inserting or updating data.
+REFERENCES– to constrain the value stored in the column that must exist in a column in another table.
+PostgreSQL CREATE TABLE example
+We will create a new table named account that has the following columns with the corresponding constraints:
+
+user_id – primary key
+username – unique and not null
+password – not null
+email – unique and not null
+created_on – not null
+last_login – null
+The following statement creates the accounttable:
+
+
+CREATE TABLE account(
+   user_id serial PRIMARY KEY,
+   username VARCHAR (50) UNIQUE NOT NULL,
+   password VARCHAR (50) NOT NULL,
+   email VARCHAR (355) UNIQUE NOT NULL,
+   created_on TIMESTAMP NOT NULL,
+   last_login TIMESTAMP
+);
+postgresql create table example
+
+The following statement creates the  role table that consists of two columns: role_id and role_name:
+
+
+CREATE TABLE role(
+   role_id serial PRIMARY KEY,
+   role_name VARCHAR (255) UNIQUE NOT NULL
+);
+postgresql create table - role table example
+
+The following statement creates the account_roles table that has three columns: user_id, role_id and grant_date.
+
+
+CREATE TABLE account_role
+(
+  user_id integer NOT NULL,
+  role_id integer NOT NULL,
+  grant_date timestamp without time zone,
+  PRIMARY KEY (user_id, role_id),
+  CONSTRAINT account_role_role_id_fkey FOREIGN KEY (role_id)
+      REFERENCES role (role_id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT account_role_user_id_fkey FOREIGN KEY (user_id)
+      REFERENCES account (user_id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+postgresql create tables many to many
+
+Let’s examine the above statement in more detail.
+
+The primary key of the account_role table consists of two columns: user_id and role_id, therefore we have to use primary key table-level constraint to define the primary key as follows:
+
+1
+PRIMARY KEY (user_id, role_id)
+Because the user_idcolumn references to the user_idcolumn in the account table, we need to define a foreign key constraint for the user_idcolumn:
+
+
+CONSTRAINT account_role_user_id_fkey FOREIGN KEY (user_id)
+      REFERENCES account (user_id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+The role_idcolumn references to the role_idcolumn in the role table, we also need to define a foreign key constraint for the role_idcolumn.
+
+
+CONSTRAINT account_role_role_id_fkey FOREIGN KEY (role_id)
+      REFERENCES role (role_id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Introduction to PostgreSQL ALTER TABLE statement
+To change the existing table structure, you use PostgreSQL ALTER TABLE statement. The syntax of the ALTER TABLE is as follows:
+
+
+ALTER TABLE table_name action;
+PostgreSQL provides many actions that allow you to:
+
+Add a column, drop a column, rename a column, or change a column’s data type.
+Set a default value for the column.
+Add a CHECKconstraint to a column.
+Rename a table.
+The following illustrates the ALTER TABLE statement variants.
+
+To add a new column to a table, you use ALTER TBLE ADD COLUMN statement:
+
+
+ALTER TABLE table_name ADD COLUMN new_column_name TYPE;
+To remove an existing column, you use ALTER TABLE DROP COLUMN statement:
+
+
+ALTER TABLE table_name DROP COLUMN column_name;
+To rename an existing column, you use the ALTER TABLE RENAME COLUMN TO statement:
+
+
+ALTER TABLE table_name RENAME COLUMN column_name TO new_column_name;
+To change a default value of the column, you use ALTER TABLE ALTER COLUMN SET DEFAULT or  DROP DEFAULT:
+
+
+ALTER TABLE table_name ALTER COLUMN column_name [SET DEFAULT value | DROP DEFAULT];
+To change the NOT NULL constraint, you use ALTER TABLE ALTER COLUMN statement:
+
+
+ALTER TABLE table_name ALTER COLUMN column_name [SET NOT NULL| DROP NOT NULL];
+To add a CHECKconstraint, you use ALTER TABLE ADD CHECK statement:
+
+
+ALTER TABLE table_name ADD CHECK expression;
+To add a constraint, you use ALTER TABLE ADD CONSTRAINT statement:
+
+
+ALTER TABLE table_name ADD CONSTRAINT constraint_name constraint_definition;
+To rename a table you use ALTER TABLE RENAME TO statement:
+
+
+ALTER TABLE table_name RENAME TO new_table_name;
+PostgreSQL ALTER TABLE examples
+Let’s create a new table named links for practicing with the ALTER TABLE statement.
+
+
+CREATE TABLE links (
+   link_id serial PRIMARY KEY,
+   title VARCHAR (512) NOT NULL,
+   url VARCHAR (1024) NOT NULL UNIQUE
+);
+To add a new column named active, you use the following statement:
+
+
+ALTER TABLE links ADD COLUMN active boolean;
+The following statement removes the activecolumn from the linkstable:
+
+
+ALTER TABLE links DROP COLUMN active;
+To rename the titlecolumn to link_title, you use the following statement:
+
+ALTER TABLE links RENAME COLUMN title TO link_title;
+The following statement adds a new column named targetto the linkstable:
+
+
+ALTER TABLE links ADD COLUMN target VARCHAR(10);
+To set _blank as the default value for the targetcolumn in the linkstable, you use the following statement:
+
+
+ALTER TABLE links ALTER COLUMN target
+SET DEFAULT '_blank';
+If you insert the new row into the linkstable without specifying a value for the target column, the targetcolumn will take _blankas the default value. See the following example:
+
+
+INSERT INTO links (link_title, url)
+VALUES('PostgreSQL Tutorial','https://www.postgresqltutorial.com/');
+Query data from the linkstable:
+
+
+SELECT * FROM links;
+PostgreSQL ALTER TABLE SET DEFAULT
+
+The following statement adds a CHECKcondition to the targetcolumn so that the targetcolumn only accepts the following values: _self, _blank, _parent, and _top:
+
+
+ALTER TABLE links ADD CHECK (target IN ('_self', '_blank', '_parent', '_top'));
+If you try to insert a new row that violates the CHECKconstraint set for the targetcolumn, PostgreSQL will issue an error as shown in the following example:
+
+
+INSERT INTO links(link_title,url,target) 
+VALUES('PostgreSQL','http://www.postgresql.org/','whatever');
+
+[Err] ERROR:  new row for relation "links" violates check constraint "links_target_check"
+DETAIL:  Failing row contains (2, PostgreSQL, http://www.postgresql.org/, whatever).
+To rename the linkstable to url, you use the following statement:
+
+
+ALTER TABLE links RENAME TO url;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+PostgreSQL DROP TABLE syntax
+To remove existing table from the database, you use the DROP TABLE statement as shown following:
+
+
+DROP TABLE [IF EXISTS] table_name [CASCADE | RESTRICT];
+You specify the table name after the DROP TABLE keyword to remove the table permanently from the database.
+
+If you remove a non-existent table, PostgreSQL issues an error. To avoid this situation, you can use the IF EXISTS parameter followed by the DROP TABLE clause.
+
+In case the table that you want to remove is used in views, constraints or any other objects, the CASCADE allows you to remove those dependent objects together with the table automatically.
+
+RESTRICTrefuses to drop table if there is any object depends on it. PostgreSQL uses RESTRICT by default.
+
+You can put a list of tables after the DROP TABLE to remove multiple tables at once, each table separated by a comma.
+
+Notice that only superuser, schema owner, and table owner have sufficient privilege to remove the table.
+
+PostgreSQL DROP TABLE examples
+The following statement removes a table named authorin the database:
+
+
+DROP TABLE author;
+PostgreSQL issues an error because the authortable does not exist.
+
+
+[Err] ERROR:  table "author" does not exist
+To avoid this error, you can use the IF EXISTS parameter.
+
+
+DROP TABLE IF EXISTS author;
+As you can see clearly from the output, PostgreSQL issues a notice instead of an error.
+
+We create new tables named author and page for the next demonstration:
+
+
+CREATE TABLE author (
+   author_id INT NOT NULL PRIMARY KEY,
+   firstname VARCHAR (50),
+   lastname VARCHAR (50)
+);
+ 
+CREATE TABLE page (
+   page_id serial PRIMARY KEY,
+   title VARCHAR (255) NOT NULL,
+   CONTENT TEXT,
+   author_id INT NOT NULL,
+   FOREIGN KEY (author_id) REFERENCES author (author_id)
+);
+You can remove the authortable by using the following statement:
+
+
+DROP TABLE IF EXISTS author;
+Because the constraint on the pagetable depends on the authortable, PostgreSQL issues an error message.
+
+
+[Err] ERROR:  cannot drop table author because other objects depend on it
+DETAIL:  constraint page_author_id_fkey on table page depends on table author
+HINT:  Use DROP ... CASCADE to drop the dependent objects too.
+In this case, you need to remove all dependent objects first before removing the authortable or use CASCADE parameter as follows:
+
+
+DROP TABLE author CASCADE;
+PostgreSQL removes the authortable as well as the constraint in the pagetable. In addition, it issues a notice:
+
+
+NOTICE:  drop cascades to constraint page_author_id_fkey on table page
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Introduction to the PostgreSQL ADD COLUMN statement
+To add a new column to an existing table, you use the ALTER TABLE ADD COLUMN statement as follows:
+
+
+ALTER TABLE table_name
+ADD COLUMN new_column_name data_type;
+Let’s examine the statement in a greater detail.
+
+First, specify the table that you want to add a new column in the ALTER TABLE clause.
+Second, indicate the column name with its attribute such as data type, default value, etc., in the ADD COLUMN clause.
+When you add a new column to the table, PostgreSQL appends it at the end of the table. PostgreSQL has no option to specify the position of the new column in the table.
+
+To add multiple columns to an existing table, you use multiple ADD COLUMN clauses in the ALTER TABLE statement as follows:
+
+
+ALTER TABLE table_name
+ADD COLUMN new_column_name_1 data_type constraint,
+ADD COLUMN new_column_name_2 data_type constraint,
+...
+ADD COLUMN new_column_name_n data_type constraint;
+PostgreSQL ADD COLUMN examples
+The following CREATE TABLE statement creates a new table named customers with two columns: id and customer_name:
+
+
+CREATE TABLE customers (
+   id SERIAL PRIMARY KEY,
+   customer_name VARCHAR NOT NULL
+);
+To add the phone column to the customers table, you use the following statement:
+
+
+ALTER TABLE customers 
+ADD COLUMN phone VARCHAR;
+The following statement adds the fax and email columns to the customers table:
+
+
+ALTER TABLE custoemr 
+ ADD COLUMN fax VARCHAR,
+ ADD COLUMN email VARCHAR;
+The following command describes the  customers table structure.
+
+
+#\d customers
+
+                                  Table "public.customers"
+    Column     |       Type        |                       Modifiers
+---------------+-------------------+--------------------------------------------------------
+ id            | integer           | not null default nextval('customers_id_seq'::regclass)
+ customer_name | character varying |
+ phone         | character varying |
+ fax           | character varying |
+ email         | character varying |
+Indexes:
+    "customers_pkey" PRIMARY KEY, btree (id)
+As you see, we have the phone, fax, and email columns were added at the end of the column list of the customers table.
+
+Add a column with NOT NULL constraint to a table that has data
+Let’s insert data into the  customers table.
+
+
+INSERT INTO customers (customer_name)
+VALUES
+   ('Apple'),
+   ('Samsung'),
+   ('Sony');
+Suppose you want to add the contact_name column to the customers table:
+
+
+ALTER TABLE customers 
+ADD COLUMN contact_name VARCHAR NOT NULL;
+PostgreSQL issued an error:
+
+
+ERROR:  column "contact_name" contains null values
+This is because the contact_name column has the NOT NULL constraint. When PostgreSQL added the column, this new column takes the NULL value, which violates the NOT NULL constraint.
+
+To solve this problem…
+
+First, you need to add the column without the NOT NULL constraint.
+
+
+ALTER TABLE customers 
+ADD COLUMN contact_name VARCHAR;
+Second, update the values for the contact_name column.
+
+
+UPDATE customers
+SET contact_name = 'John Doe'
+WHERE
+   ID = 1;
+ 
+UPDATE customers
+SET contact_name = 'Mary Doe'
+WHERE
+   ID = 2;
+ 
+UPDATE customers
+SET contact_name = 'Lily Bush'
+WHERE
+   ID = 3;
+Third, set the NOT NULL constraint for the contact_name column.
+
+
+ALTER TABLE customers
+ALTER COLUMN contact_name SET NOT NULL;
+Another way to solve the problem is to…
+
+First, add the column with the default value.
+
+
+ALTER TABLE customers
+ADD COLUMN contact_name NOT NULL DEFAULT 'foo';
+Second, update the contact data.
+
+Third, remove the default value from the column.
+
+
+ALTER TABLE customers 
+ALTER COLUMN contact_name 
+DROP DEFAULT;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Introduction to PostgreSQL DROP COLUMN clause
+To drop a column of a table, you use the DROP COLUMN clause in the ALTER TABLE statement as follows:
+
+
+ALTER TABLE table_name 
+DROP COLUMN column_name;
+When you remove a column from a table, PostgreSQL will automatically remove all of its indexes and constraints involving the column.
+
+If the column that you want to remove is used in other database objects such as views, triggers, stored procedures, etc., you cannot drop the column because other objects depend on it. In this case, you add the CASCADE option to the DROP COLUMN clause to drop the column and all of its associated objects:
+
+
+ALTER TABLE table_name 
+DROP COLUMN column_name CASCADE;
+If you remove a non-existing column, PostgreSQL will issue an error. To avoid this, you can add the IF EXISTS option as follows:
+
+
+ALTER TABLE table_name 
+DROP COLUMN IF EXISTS column_name;
+In this form, if you remove a column that does not exist, PostgreSQL will issue a notice instead of an error.
+
+If you want to drop multiple columns of a table in a single command, you use the following statement:
+
+
+ALTER TABLE table_name
+DROP COLUMN column_name_1,
+DROP COLUMN column_name_2,
+...;
+Notice that each DROP COLUMN clause is separated by a comma (,).
+
+PostgreSQL allows you to drop the only column of a table, causing a zero-column table, which is not permitted in SQL standard.
+
+Let’s take a look at some examples to see how the ALTER TABLE DROP COLUMN statement works.
+
+PostgreSQL DROP COLUMN examples
+We will create three tables: books, categories, and publishers for the demonstration.
+
+PostgreSQL DROP COLUMN Example Diagram
+
+In this diagram, each book has only one publisher and each publisher can publish many books. Each book is assigned to a category and each category can have many books.
+
+The following statements create the three tables:
+
+
+CREATE TABLE publishers (
+    publisher_id serial PRIMARY KEY,
+    name VARCHAR NOT NULL
+);
+ 
+CREATE TABLE categories (
+    category_id serial PRIMARY KEY,
+    name VARCHAR NOT NULL
+);
+ 
+CREATE TABLE books (
+    book_id serial PRIMARY KEY,
+    title VARCHAR NOT NULL,
+    isbn VARCHAR NOT NULL,
+    published_date DATE NOT NULL,
+    description VARCHAR,
+    category_id INT NOT NULL,
+    publisher_id INT NOT NULL,
+    FOREIGN KEY (publisher_id) REFERENCES publishers (publisher_id),
+    FOREIGN KEY (category_id) REFERENCES categories (category_id)
+);
+In addition, we create a view based on the books and publishers tables as follows:
+
+
+CREATE VIEW book_info AS SELECT
+    book_id,
+    title,
+    isbn,
+    published_date,
+    name
+FROM
+    books b
+INNER JOIN publishers P ON P .publisher_id = b.publisher_id
+ORDER BY
+    title;
+Suppose you want to remove the category_id column of the books table, you use the following statement:
+
+
+ALTER TABLE books DROP COLUMN category_id;
+Let’s show the books table:
+
+
+test=# \d books;
+                                     Table "public.books"
+     Column     |       Type        |                        Modifiers
+----------------+-------------------+---------------------------------------------------------
+ book_id        | integer           | not null default nextval('books_book_id_seq'::regclass)
+ title          | character varying | not null
+ isbn           | character varying | not null
+ published_date | date              | not null
+ description    | character varying |
+ publisher_id   | integer           | not null
+Indexes:
+    "books_pkey" PRIMARY KEY, btree (book_id)
+Foreign-key constraints:
+    "books_publisher_id_fkey" FOREIGN KEY (publisher_id) REFERENCES publishers(publisher_id)
+As you can see, the statement removed not only the category_id column but also the foreign key constraint involving the category_id column.
+
+Let’s try to remove the publisher_id column:
+
+
+ALTER TABLE books DROP COLUMN publisher_id;
+PostgreSQL issued the following error:
+
+
+ERROR:  cannot drop table books column publisher_id because other objects depend on it
+DETAIL:  view book_info depends on table books column publisher_id
+HINT:  Use DROP ... CASCADE to drop the dependent objects too.
+It stated that the book_info view is using the column publisher_id of the books table. You need to use the CASCADE option to remove both the publisher_id column and book_info view as shown in the following statement:
+
+
+ALTER TABLE books DROP COLUMN publisher_id CASCADE;
+The statement issued the following notice, which is what we expected.
+
+
+NOTICE:  drop cascades to view book_info
+To remove both isbn and description columns in a single statement, you add multiple DROP COLUMN clauses as follows:
+
+
+ALTER TABLE books 
+  DROP COLUMN isbn,
+  DROP COLUMN description;
+It worked as expected.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Setting up sample tables
+Suppose we have two tables called basket_a and basket_b that stores fruits:
+
+
+CREATE TABLE basket_a (
+    id INT PRIMARY KEY,
+    fruit VARCHAR (100) NOT NULL
+);
+ 
+CREATE TABLE basket_b (
+    id INT PRIMARY KEY,
+    fruit VARCHAR (100) NOT NULL
+);
+ 
+INSERT INTO basket_a (id, fruit)
+VALUES
+    (1, 'Apple'),
+    (2, 'Orange'),
+    (3, 'Banana'),
+    (4, 'Cucumber');
+ 
+INSERT INTO basket_b (id, fruit)
+VALUES
+    (1, 'Orange'),
+    (2, 'Apple'),
+    (3, 'Watermelon'),
+    (4, 'Pear');
+The tables have some common fruits such as apple and orange. Let’s call the basket_a is the left table and basket_b is the right table.
+
+PostgreSQL inner join
+The following statement joins the left table with the right table using the values in the fruit column:
+
+
+SELECT
+    a.id id_a,
+    a.fruit fruit_a,
+    b.id id_b,
+    b.fruit fruit_b
+FROM
+    basket_a a
+INNER JOIN basket_b b ON a.fruit = b.fruit;
+PostgreSQL Join - inner join example
+
+As you can see clearly from the result, the inner join returns a result set that contains row in the left table that match with the row in the right table.
+
+The following Venn diagram illustrates the inner join:
+
+PostgreSQL Join - Inner Join
+
+PostgreSQL left join
+The following statement joins the left table with the right table using left join (or left outer join):
+
+
+SELECT
+    a.id id_a,
+    a.fruit fruit_a,
+    b.id id_b,
+    b.fruit fruit_b
+FROM
+    basket_a a
+LEFT JOIN basket_b b ON a.fruit = b.fruit;
+PostgreSQL Join - left join example
+
+The left join returns a complete set of rows from the left table with the matching rows if available from the right table. If there is no match, the right side will have null values.
+
+The following Venn diagram illustrates the left join:
+
+PostgreSQL Join - Left Join
+
+To get the only rows from the left table but not in the right table, you use the left join then exclude the rows that you want from the right table using the WHERE clause:
+
+
+SELECT
+    a.id id_a,
+    a.fruit fruit_a,
+    b.id id_b,
+    b.fruit fruit_b
+FROM
+    basket_a a
+LEFT JOIN basket_b b ON a.fruit = b.fruit
+WHERE b.id IS NULL;
+The output is:
+
+PostgreSQL Join - left join with where example
+
+The following Venn diagram illustrates the left join with only rows from the left table:
+
+PostgreSQL Join - Left Join with Where
+
+PostgreSQL right join
+The right join or right outer join is a reversed version of the left join. It produces a result set that contains all rows from the right table with matching rows from the left table. If there is no match, the left side will contain null values.
+
+The following statement performs the right join between the left and the right tables:
+
+
+SELECT
+    a.id id_a,
+    a.fruit fruit_a,
+    b.id id_b,
+    b.fruit fruit_b
+FROM
+    basket_a a
+RIGHT JOIN basket_b b ON a.fruit = b.fruit;
+Here is the output:
+
+PostgreSQL Join - right join example
+
+The following Venn diagram illustrates the right join:
+
+PostgreSQL Join - Right Join
+
+Similarly, you can get only rows from the right table but not from the left table by adding a WHERE clause as follows:
+
+
+SELECT
+    a.id id_a,
+    a.fruit fruit_a,
+    b.id id_b,
+    b.fruit fruit_b
+FROM
+    basket_a a
+RIGHT JOIN basket_b b ON a.fruit = b.fruit
+WHERE a.id IS NULL;
+PostgreSQL Join - right join with where example
+
+The following Venn diagram illustrates the right join with only rows from the right table:
+
+PostgreSQL Join - Right Join with Where
+
+PostgreSQL full outer join
+The full outer join or full join produces a result set that contains all rows from both the left and right tables, with the matching rows from both sides where available. If there is no match, the missing side contains null values.
+
+The following statement illustrates the full outer join:
+
+
+SELECT
+    a.id id_a,
+    a.fruit fruit_a,
+    b.id id_b,
+    b.fruit fruit_b
+FROM
+    basket_a a
+FULL OUTER JOIN basket_b b ON a.fruit = b.fruit;
+Note that the OUTER keyword is optional.
+
+Here is the result set:
+
+PostgreSQL Join - full outer example
+
+The following Venn diagram illustrates the full outer join:
+
+PostgreSQL Join - Full Outer Join
+
+To return a set of rows unique to the left and right tales, you perform the same full join first and then exclude the rows that you don’t want from both sides using a WHERE clause:
+
+
+SELECT
+    a.id id_a,
+    a.fruit fruit_a,
+    b.id id_b,
+    b.fruit fruit_b
+FROM
+    basket_a a
+FULL JOIN basket_b b ON a.fruit = b.fruit
+   WHERE a.id IS NULL OR b.id IS NULL;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Introduction to PostgreSQL GROUP BY clause
+The GROUP BY clause divides the rows returned from the SELECT statement into groups. For each group, you can apply an aggregate function e.g.,  SUM() to calculate the sum of items or COUNT() to get the number of items in the groups.
+
+The following statement illustrates the syntax of the GROUP BY clause:
+
+
+SELECT 
+   column_1, 
+   column_2,
+   aggregate_function(column_3)
+FROM 
+   table_name
+GROUP BY 
+   column_1,
+   column_2;
+The GROUP BY clause must appear right after the FROM or WHERE clause. Following the GROUP BY clause is one column or a list of comma-separated columns. Besides the table column, you can  use an expression in the GROUP BY clause.
+
+PostgreSQL GROUP BY clause examples
+Let’s take a look at the payment table in the sample database.
+
+payment
+A) Using PostgreSQL GROUP BY without an aggregate function example
+You can use the GROUP BY clause without applying an aggregate function. The following query gets data from the payment table and groups the result by customer id.
+
+
+SELECT
+   customer_id
+FROM
+   payment
+GROUP BY
+   customer_id;
+PostgreSQL Group By example
+
+In this case, the GROUP BY works like the DISTINCT clause that removes duplicate rows from the result set.
+
+B) Using PostgreSQL GROUP BY with SUM() function example
+The GROUP BY clause is useful when it is used in conjunction with an aggregate function. For example, to get the amount that a customer has been paid, you use the GROUP BY clause to divide the payment table into groups; for each group, you calculate the total amounts using the SUM() function:
+
+
+SELECT
+   customer_id,
+   SUM (amount)
+FROM
+   payment
+GROUP BY
+   customer_id;
+PostgreSQL Group By with SUM
+
+The GROUP BY clause sorts the result set by customer id and adds up the amount that belongs to the same customer. Whenever the customer_id changes, it adds the row to the returned result set.
+
+You can use the ORDER BY clause with GROUP BY clause to sort the groups:
+
+
+SELECT
+   customer_id,
+   SUM (amount)
+FROM
+   payment
+GROUP BY
+   customer_id
+ORDER BY
+   SUM (amount) DESC;
+PostgreSQL Group By and Order By
+
+C) Using PostgreSQL GROUP BY with COUNT() function example
+To count the number of payment transactions that each staff has been processing, you group the rows in the payment table based on staff_id and use the COUNT() function to get the number of transactions as shown in the following query:
+
+
+SELECT
+   staff_id,
+   COUNT (payment_id)
+FROM
+   payment
+GROUP BY
+   staff_id;
+PostgreSQL Group By and Count
+
+The GROUP BY clause sorts the result set by value in the staff_id column. It keeps a running total of rows, and whenever the staff id changes, it adds the row to the returned result set.
+
+To filter groups, you use the HAVING clause instead of WHERE clause.
+
+D) Using PostgreSQL GROUP BY with multiple columns
+The following example uses multiple columns in the GROUP BY clause:
+
+
+SELECT 
+   customer_id, 
+   staff_id, 
+   SUM(amount) 
+FROM 
+   payment
+GROUP BY 
+   staff_id, 
+   customer_id
+ORDER BY 
+    customer_id;
+In this example, the GROUP BY clause divides the rows in the payment table by the values in the customer_id and staff_id columns. For each group of (customer_id, staff_id), the SUM() calculates the total amount.
+
+PostgreSQL Group By multiple columns
+
+E) Grouping by dates
+The payment_date is a timestamp column. To group payments by dates, you use the DATE() function to convert timestamps to dates first and then group payments by the result date:
+
+
+SELECT 
+   DATE(payment_date) paid_date, 
+   SUM(amount) sum
+FROM 
+   payment
+GROUP BY
+   DATE(payment_date);
+
+
+
+
+
+
+
+
+view.html
+
+<div id="polo" data-id="1">Polo</div>
+
+document.getElementById('polo').onclick = function() {
+	var request = new Request();
+	request.send('GET product detail on product with id', 1);
+}
+
+server.py
+
+result = application.listen_on('GET product detail on product with id')
+
+print(result.id)
+
+get more information about object with result.id
+data
+
+application.render_view('product_detail.html', data)
+
+
+
+
+
+
+createdb example
+
+psql example
+
+create table table1 (
+	id INTEGER PRIMARY KEY,
+	description VARCHAR NOT NULL);
+	
+\dt
+display tables
+
+\d table1
+display rows in table
+
+\c example2
+
+\l
+list tables
+
+
+#!/usr/bin/env python3
+
+import psycopg2
+
+connection = psycopg2.connect('dbname=example')
+
+cursor = connection.cursor()
+
+cursor.execute('''
+    CREATE TABLE table2 (
+        id INTEGER PRIMARY KEY,
+        completed BOOLEAN NOT NULL DEFAULT false
+    );
+    '''
+)
+
+cursor.execute('INSERT INTO table2 (id, completed) VALUES (1, true);')
+
+connection.commit()
+
+connection.close()
+cursor.close()
+
+
+psql example
+
+\dt
+
+\d table2
+
+select * from table2;
+
+
+
+
+
+cursor.fetchall()
+fetch all results
+
+cursor.fetchmany(3)
+fetches 3 results
+
+cursor.fetchone()
+fetches first result in result set
+
+
+
+
+
+
+
+
+
+
+#!/usr/bin/env python3
+
+import psycopg2
+
+connection = psycopg2.connect('dbname=example')
+
+cursor = connection.cursor()
+
+cursor.execute('DROP TABLE IF EXISTS table2;')
+
+cursor.execute('''
+    CREATE TABLE table2 (
+        id INTEGER PRIMARY KEY,
+        completed BOOLEAN NOT NULL DEFAULT false
+    );
+    '''
+)
+
+SQL = '''INSERT INTO table2 
+    (id, completed) 
+    VALUES (%(id)s, %(completed)s);'''
+
+data = {
+    'id': 2,
+    'completed': False
+}
+
+cursor.execute(SQL, data)
+
+cursor.execute('SELECT * from table2;')
+
+result = cursor.fetchall()
+
+print(result)
+
+connection.commit()
+
+connection.close()
+cursor.close()
+
+
+
+
+
+
+
+WRITING SQLALCHEMY
+
+class Todo(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	description = db.Column(db.String(), nullable=False)
+	completed = db.Column(db.Boolean, nullable=False, default=False)
+
+
+
+
+
+

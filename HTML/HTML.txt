@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+Nearly every web document using HTML will start with this. This just tells the browser it is rendering an HTML document.
+
+<html> and </html>
+The first of these will likely be right after the doctype tag, while the second will “close” this tag, and won’t be present until the end of the HTML document. These note that everything in between is HTML code.
+
+<body> and </body>
+The body is where most of the content you will actually see on your webpage goes. It is closed with a </body> tag. Note that in basic examples, it is not actually required, as the page assumes other content is within the body, but by the end of this lesson you should be using this regularly. There is actually a <head> section that can come before the body, but we will skip that for now.
+
+You can see the tags <p> and </p> that stand for paragraph.
+
+<p class="dog-breed">Labrador Retriever</p>
+
+The opening tag is the first HTML tag used to start an element.
+The content is the info contained between the opening and closing tags. Only this content inside the opening and closing body tags is displayed to the screen.
+The closing tag is the second tag used to define the end of a single element. Closings tags have a forward slash / inside of them, always after the left angle bracket.
+(Optional) The attribute name and value.
+
+Block elements are:
+
+paragraphs <p>
+lists:
+unordered (with bullet points) <ul>, or
+ordered - lists (with numbers) <ol>
+headings: from 1st level <h1> to 6th level headings - <h6>
+articles <article>
+sections <section>
+long quotes <blockquote>
+Inline elements are meant to differentiate part of a text, to give it a particular function or meaning. Inline elements usually comprise a single or few words.
+
+Inline elements are:
+
+links <a>
+emphasized words <em>
+important words <strong>
+
+Spans
+The HTML <span> element is like a generic wrapper that is used to group text, mostly for styling purposes. Consider the following code:
+
+<style>
+p {
+  color: black;
+}
+.red {
+  color: red;
+}
+</style>
+<p>
+  This sentence needs some <span class=”red”>visual emphasis</span> to really bring home the point.
+</p>
+
+Blockquotes
+Blockquotes are used to identify a citation.
+
+<blockquote cite="https://www.wikiwand.com/en/Scooby-Doo_(character)">
+  <p>Ruh-roh--RAGGY!!!</p>
+  <footer>—Scooby Doo, <cite>Mystery Incorporated</cite></footer>
+</blockquote>
+
+Line Breaks
+The spacing between code in an HTML file doesn’t affect the positioning of elements in the browser.
+
+If you are interested in modifying the spacing in the browser, you can use HTML’s line break element.
+
+<p>
+  I jump in delight<br />
+  I run off in frenzy<br />
+
+UNORDERED LIST
+
+	<ul>
+		<li>List Item</li>
+		<li>List Item</li>
+	</ul>
+
+ORDERED LIST
+
+	<ol>
+		<li>List 1</li>
+		<li>List 2</li>
+	</ol>
+
+Images
+The “source” (URL or file location) from where an image is taken through the src attribute
+The image’s alternative text (often a description for those with accessibility needs) is provided through the alt attribute
+The image size can be adjusted through the width and height attributes
+Images are self-closing - you add a slash at the end, instead of another </img> tag as we have seen before
+In the example below, we are using a JPG image called “nefertiti”.
+
+<img
+  src="images/nefertiti.jpg"
+  alt="A smiling Labrador Retriever"
+  width="480"
+  height="320"
+/>
+
+DIV
+
+<style>
+	#love{
+		color: red;
+	}
+</style>
+
+<div id="love">Love Will Overcome</div>
+
+
+LINKS
+
+In the example below, we are setting the URL destination to The Labrador Club website, preventing this website from being able to access the window.opener property and ensuring it runs in a separate process with the noopener rel value. Finally we are requesting that the link open in a new window instead of the same one with the _blank target value.
+
+<a href="https://thelabradorclub.com" rel="noopener" target="_blank"
+  >Join The Labrador Retriever Club</a>
+  
+
+Comments
+If you write something in your code without changing how your website will be displayed by the browser, you're writing comments.
+
+Comments will be ignored by the browser and are only helpful to us people who write the code. They can help with readability both for yourself in the future, as well as others who are looking at your code, such as teammates and managers.
+
+A comment starts with <!-- and ends with -->.
+
+Title
+A browser’s tab displays the title specified in the <title> tag. The <title> tag is always inside of the <head>.
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My Coding Journal</title>
+  </head>
+</html>
+
+Semantic Elements
+Structure elements allow you to organize the main parts of your page. They usually contain other HTML elements.
+
+Here’s what a typical webpage could include:
+
+<header> as the first element of the page, that can include the logo and the tagline.
+<nav> as a list of links that go to the different pages of the website.
+<h1> as the title of the page.
+<article> as the main content of the page, like a blog post.
+<footer> as the last element of the page, located at the bottom.
+
+METAS
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>My First Template</title>
+    <meta name="description" content="A webpage with my first HTML template." />
+  </head>
+  <body>
+    <p>Hello World!</p>
+  </body>
+</html>
+
+Input Types, Select and Textarea
+Text, checkbox and radio button forms are specified by an input type.
+
+<!-- A text input -->
+<input type="text" />
+<!-- A checkbox -->
+<input type="checkbox" />
+<!-- A radio button -->
+<input type="radio" />
+
+Separately, a dropdown menu can be created using select.
+
+<label for="color-select">Choose a color:</label>
+
+<select id="color-select">
+  <option value="">--Please choose an option--</option>
+  <option value="blue">Blue</option>
+  <option value="red">Red</option>
+  <option value="green">Green</option>
+  <option value="yellow">Yellow</option>
+  <option value="orange">Orange</option>
+  <option value="pink">Pink</option>
+</select>
+
+Last is textarea, which creates a more free-form text field for the user to enter information.
+
+<label for="learn">What do you hope to learn today?</label>
+
+<textarea id="learn" name="learn" rows="5" cols="30">
+I hope to learn about...
+</textarea>

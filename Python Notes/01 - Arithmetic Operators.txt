@@ -1,0 +1,11 @@
+print()
+
++ - addition
+- - subtraction
+* - multiplication
+/ - division
+** - exponentiation
+^ = notwose XOR
+& - Mod (remainder after dividing)
+// - integer division
+

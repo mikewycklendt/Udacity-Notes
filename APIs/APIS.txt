@@ -1,0 +1,5 @@
+getting keys:
+
+	functin('string', 'string')
+	variable = function('string', 'string')
+	variable.keys()

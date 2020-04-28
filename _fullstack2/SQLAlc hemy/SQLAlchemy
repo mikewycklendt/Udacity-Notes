@@ -1,0 +1,81 @@
+name = db.Column(db.String(), nullable=False)
+
+title = db.Column(db.String(), unique=True)
+
+price = db.Column(db.Float, db.CheckConstraint('price>0'))
+
+person = Person(name='Amy')
+db.session.add(person)
+db.session.add_all([person1, person2])
+db.session.commit()
+Person.query.first()
+person = Person.query.filter_by(name='Amy').first()
+person.name
+	'Amy'
+
+Person.query.all()
+Person.query.count()
+Person.query.filter(Person.name == 'Amy')
+Person.query.filter(Person.name == 'Amy', Team.name == 'Udacity')
+Person.query.get(1)  <-- gets by primary key
+
+Product.query.filter_by(category = 'Misc').delete()
+
+Person.query.filter(Person.name == 'Amy').filter(Team.name == 'Udacity').first
+
+Driver.query.join('vehicles').filter_by(driver_id=3).all()
+
+db.session.query(Person)
+
+db.session.query(Person).join(Team)
+
+MyModel.order_by(MyModel.created_at)
+MyModel.order_by(db.desc(MyModel.created_at))
+
+Order.query.limit(100).all()
+
+query = Task.query.filter(completed=True)
+query.count()
+
+query = Task.query.filter_by(category='Archived')
+query.delete()
+
+Driver.query.join('vehicles')
+
+session.rollback()
+
+session.delete(user1)
+
+
+
+
+
+
+
+
+#!/usr/bin/python3
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:postgres@3.134.26.61:5432/example'
+db = SQLAlchemy(app)
+
+class Person(db.Model):
+    __tablename__ = 'persons'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(), nullable=False)
+
+db.create_all()
+
+matt = Person(name='Matt')
+db.session.add(matt)
+db.session.commit()
+
+@app.route('/')
+def index():
+    person = Person.query.first()
+    return 'Hello ' + person.name
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=80, debug=True)

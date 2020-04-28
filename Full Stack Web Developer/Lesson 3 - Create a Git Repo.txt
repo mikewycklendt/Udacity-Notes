@@ -1,0 +1,172 @@
+SETTING UP A REPOSITORY
+
+	create a directory and go into it
+	git init
+
+clone a project
+
+	git clone (url)
+
+shorter git log
+
+	git long --oneline
+
+git log that shows what files have been changed
+
+	git log --stat
+
+show the actual changes to a file in git log
+
+	git log -p
+
+	displays the files that have been modified
+	displays the location of the lines that have been added/removed
+	displays the actual changes that have been made
+
+SHOW PATCH INFORMATION BUT NOT HIGHLIGHT LINES WHERE ONLY WHITESPACE CHANGES OCCUR:
+
+	git log -p -w
+
+show git log starting with a certain commit:
+
+	git log -p (ID)
+
+show just one commit
+
+	git show (ID)
+
+add file to staging index:
+
+`	git add (file) (file)
+
+add every file:
+
+	git add .
+
+remove a file from the staging index:
+
+	git rm --cached <file>
+
+make a commit:
+
+	git commit
+
+see the changes from working directory to last commit
+
+	git diff
+
+for git to ignore files:
+
+	add filename to .gitignore
+
+	blank lines can be used for spacing
+	# - marks line as a comment
+	* - matches 0 or more characters
+	? - matches 1 character
+	[abc] - matches a, b, _or_ c
+	** - matches nested directories - a/**/z matches
+		a/z
+		a/b/z
+		a/b/c/z
+
+commit without using the text editor:
+
+	git commit -m "Message"
+
+create a tag for most recent commit
+
+	git tag -a (tag)
+
+create a tag for a previous commit
+
+	git tag -a (tag) (ID)
+
+delete a tag:
+
+	git tag -a (tag)
+
+create a branch
+
+	git branch (branch name)
+
+create a branch from a specific commit:
+
+	git branch (branch namm) (ID)
+
+delete a branch
+
+	git branch -d (branch name)
+
+force delete a branch
+
+	git branch -D (branch name)
+
+see commits from all branches in git log
+
+	git log --oneline --graph --all
+
+undoing the last change
+
+	git reset --hard HEAD^
+
+alter the most recent commit:
+
+	git commit --amend
+
+to revert a commit
+
+	git revert (ID)
+
+	--mixed : moves changes to working directory
+	--soft : mooves changes to staging index
+	--hard : erases changes from previous commits
+
+	the parent commit – the following indicate the parent commit of the 
+	current commit
+		HEAD^
+		HEAD~	
+		HEAD~1
+	the grandparent commit – the following indicate the grandparent commit 
+	of the current commit
+		HEAD^^
+		HEAD~2
+	the great-grandparent commit – the following indicate the great-
+	grandparent commit of the current commit
+		HEAD^^^
+		HEAD~3
+
+removing uncommited changes from the working directory
+
+	git checkout -- (file)
+
+
+to merge branches
+
+	git checkout (branch you want to merge with)
+	git merge (branch you want to merge)
+
+combine commits
+
+	git rebase -i HEAD~3 (merges HEAD, HEAD~1, HEAD~2)
+
+	use p or pick – to keep the commit as is
+	use r or reword – to keep the commit's content but alter the commit message
+	use e or edit – to keep the commit's content but stop before committing so 
+		that you can: 
+			add new content or files
+			remove content or files
+			alter the content that was going to be committed
+	use s or squash – to combine this commit's changes into the previous commit 
+		(the commit above it in the list)
+	use f or fixup – to combine this commit's change into the previous one but 
+		drop the commit message
+	use x or exec – to run a shell command
+	use d or drop – to delete the commit
+
+
+force pushing
+
+	git push -f (shortname) (branch to push)
+
+
+	
